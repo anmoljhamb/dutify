@@ -1,9 +1,7 @@
 import cors from "cors";
-import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import morgan from "morgan";
-import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
