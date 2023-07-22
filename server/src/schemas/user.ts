@@ -8,3 +8,10 @@ export const userSignUpSchema = Yup.object({
         role: Yup.string().min(1).max(128).required(),
     }),
 });
+
+export const loginUserSchema = Yup.object({
+    body: Yup.object({
+        email: Yup.string().email().required(),
+        password: Yup.string().min(6).required(),
+    }),
+});

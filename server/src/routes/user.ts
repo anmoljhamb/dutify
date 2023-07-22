@@ -1,18 +1,55 @@
 import express, { Request, Response, NextFunction } from "express";
 import { validate } from "../middleware";
-import { userSignUpSchema } from "../schemas";
+import { loginUserSchema, userSignUpSchema } from "../schemas";
 import { BaseUser, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
-import { adminAuth, adminDb, getRole } from "../utils";
+import { adminAuth, adminDb, clientAuth, getRole } from "../utils";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export const userRouter = express.Router();
 
 userRouter.get("/", async (_req, res, next) => {
-    const users = (await adminDb.collection("users").get()).docs.map((doc) => {
-        return { ...doc.data(), uid: doc.id, role: getRole(doc.data().role) };
-    });
-    return res.status(200).json(users);
+    try {
+        const users = (await adminDb.collection("users").get()).docs.map(
+            (doc) => {
+                return {
+                    ...doc.data(),
+                    uid: doc.id,
+                    role: getRole(doc.data().role),
+                };
+            }
+        );
+        return res.status(200).json(users);
+    } catch (e) {
+        next(e);
+    }
 });
+
+userRouter.post(
+    "/login",
+    validate(loginUserSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const user = req.body as { email: string; password: string };
+            const userCredentials = await signInWithEmailAndPassword(
+                clientAuth,
+                user.email,
+                user.password
+            );
+            const currentUser = clientAuth.currentUser!;
+            const userDetails = (
+                await adminDb.collection("users").doc(currentUser.uid).get()
+            ).data() as BaseUser;
+            return res.status(200).json({
+                ...userDetails,
+                role: getRole(userDetails.role),
+                accessToken: await currentUser.getIdToken(),
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+);
 
 userRouter.post(
     "/signup",
@@ -51,6 +88,9 @@ userRouter.use(
         if ("code" in err && "message" in err) {
             if (err.code === "auth/user-not-found") {
                 return next(createHttpError.NotFound(err.message));
+            }
+            if (err.code === "auth/user-not-found") {
+                return next(createHttpError.BadRequest(err.message));
             }
             return next(createHttpError.BadRequest(err.message));
         }
