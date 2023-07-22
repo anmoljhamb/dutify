@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { protectedRoute, validate } from "../middleware";
 import { loginUserSchema, userSignUpSchema } from "../schemas";
-import { BaseUser, ValidationSchema } from "../types";
+import { BaseUser, User, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
 import { adminAuth, adminDb, clientAuth, getRole } from "../utils";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -10,15 +10,25 @@ export const userRouter = express.Router();
 
 userRouter.get("/", protectedRoute, async (_req, res, next) => {
     try {
-        const users = (await adminDb.collection("users").get()).docs.map(
+        const currentUser = res.locals.user as User;
+
+        let users = (await adminDb.collection("users").get()).docs.map(
             (doc) => {
                 return {
                     ...doc.data(),
                     uid: doc.id,
                     role: getRole(doc.data().role),
-                };
+                } as User;
             }
         );
+
+        users = users.filter((user) => {
+            return (
+                user.role.accessLevel <= currentUser.role.accessLevel &&
+                currentUser.uid !== user.uid
+            );
+        });
+
         return res.status(200).json(users);
     } catch (e) {
         next(e);
