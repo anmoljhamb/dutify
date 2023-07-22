@@ -1,14 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 import { validate } from "../middleware";
 import { userSignUpSchema } from "../schemas";
-import { User, ValidationSchema } from "../types";
+import { BaseUser, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
-import { auth, db, getRole } from "../utils";
+import { adminAuth, adminDb, getRole } from "../utils";
 
 export const userRouter = express.Router();
 
-userRouter.get("/", (_req, res) => {
-    return res.status(200).json({ message: "working" });
+userRouter.get("/", async (_req, res, next) => {
+    const users = (await adminDb.collection("users").get()).docs.map((doc) => {
+        return { ...doc.data(), uid: doc.id, role: getRole(doc.data().role) };
+    });
+    return res.status(200).json(users);
 });
 
 userRouter.post(
@@ -16,15 +19,15 @@ userRouter.post(
     validate(userSignUpSchema as unknown as ValidationSchema),
     async (req, res, next) => {
         try {
-            const user = req.body as User;
+            const user = req.body as BaseUser;
             getRole(user.role);
 
-            const currentUser = await auth.createUser({
+            const currentUser = await adminAuth.createUser({
                 email: user.email,
                 password: user.password,
             });
 
-            await db.collection("users").doc(currentUser.uid).set({
+            await adminDb.collection("users").doc(currentUser.uid).set({
                 name: user.name,
                 email: user.email,
                 role: user.role,

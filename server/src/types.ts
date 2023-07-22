@@ -9,12 +9,16 @@ export type ValidationSchema = Yup.ObjectSchema<
     Yup.AnyObject
 >;
 
-export interface User {
+export interface BaseUser {
     email: string;
     name: string;
     password: string;
     role: string;
 }
+
+export type User = BaseUser & {
+    role: Role;
+};
 
 export interface Role {
     roleName: string;
