@@ -18,7 +18,7 @@ app.use("/user", userRouter);
 // 404 not found.
 app.use((req, _res, next) => {
     const err = new createError.NotFound(
-        `The requested url ${req.url} was not found.`
+        `The requested endpoint ${req.method} ${req.url} was not found.`
     );
     return next(err);
 });
