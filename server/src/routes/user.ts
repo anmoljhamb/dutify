@@ -3,7 +3,7 @@ import { validate } from "../middleware";
 import { userSignUpSchema } from "../schemas";
 import { User, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
-import { auth, db } from "../utils";
+import { auth, db, getRole } from "../utils";
 
 export const userRouter = express.Router();
 
@@ -17,10 +17,13 @@ userRouter.post(
     async (req, res, next) => {
         try {
             const user = req.body as User;
+            getRole(user.role);
+
             const currentUser = await auth.createUser({
                 email: user.email,
                 password: user.password,
             });
+
             await db.collection("users").doc(currentUser.uid).set({
                 name: user.name,
                 email: user.email,

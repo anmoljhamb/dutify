@@ -8,7 +8,7 @@ roleRouter.get("/", async (req, res, next) => {
         const resp = (await db.collection("roles").get()).docs.map((doc) => {
             return { ...doc.data(), uid: doc.id };
         });
-        return res.status(200).json({ ...resp });
+        return res.status(200).json(resp);
     } catch (e) {
         next(e);
     }

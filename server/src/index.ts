@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import morgan from "morgan";
 import { roleRouter, userRouter } from "./routes";
+import { fetchRoles } from "./utils";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -32,6 +33,7 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     return res.status(500).json({ err });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Listening on the url *:${PORT}`);
+    await fetchRoles();
 });
