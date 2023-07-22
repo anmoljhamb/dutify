@@ -58,6 +58,30 @@ userRouter.post(
     }
 );
 
+userRouter.delete(
+    "/",
+    protectedRoute,
+    validate(fetchUserSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const currentUser = res.locals.user as User;
+            const user = await getUser(req.query.uid as string);
+            if (currentUser.role.accessLevel < user.role.accessLevel) {
+                return next(new createHttpError.Unauthorized());
+            }
+            await adminAuth.deleteUser(uid);
+            await adminDb.collection("users").doc(uid).delete();
+            return res
+                .status(200)
+                .json({ message: "The user was deleted successfully!" });
+        } catch (e) {
+            console.log(e);
+            return next(e);
+        }
+    }
+);
+
 userRouter.post(
     "/signup",
     validate(userSignUpSchema as unknown as ValidationSchema),
