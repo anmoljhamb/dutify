@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import morgan from "morgan";
+import { userRouter } from "./routes";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -10,6 +11,9 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// User Routes
+app.use("/user", userRouter);
 
 // 404 not found.
 app.use((req, _res, next) => {
