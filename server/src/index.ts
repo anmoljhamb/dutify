@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import morgan from "morgan";
-import { userRouter } from "./routes";
+import { roleRouter, userRouter } from "./routes";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // User Routes
+app.use("/role", roleRouter);
 app.use("/user", userRouter);
 
 // 404 not found.
