@@ -15,3 +15,9 @@ export const loginUserSchema = Yup.object({
         password: Yup.string().min(6).required(),
     }),
 });
+
+export const fetchUserSchema = Yup.object({
+    query: Yup.object({
+        uid: Yup.string().min(1).max(128).required(),
+    }),
+});
