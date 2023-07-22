@@ -1,6 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
 import { protectedRoute, validate } from "../middleware";
-import { fetchUserSchema, loginUserSchema, userSignUpSchema } from "../schemas";
+import {
+    fetchUserSchema,
+    loginUserSchema,
+    userSignUpSchema,
+    userUpdateSchema,
+} from "../schemas";
 import { BaseUser, User, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
 import { adminAuth, adminDb, clientAuth, getRole, getUser } from "../utils";
@@ -66,7 +71,7 @@ userRouter.delete(
         try {
             const uid = req.query.uid as string;
             const currentUser = res.locals.user as User;
-            const user = await getUser(req.query.uid as string);
+            const user = await getUser(uid);
             if (currentUser.role.accessLevel < user.role.accessLevel) {
                 return next(new createHttpError.Unauthorized());
             }
@@ -76,7 +81,44 @@ userRouter.delete(
                 .status(200)
                 .json({ message: "The user was deleted successfully!" });
         } catch (e) {
-            console.log(e);
+            return next(e);
+        }
+    }
+);
+
+userRouter.patch(
+    "/updateUser",
+    protectedRoute,
+    validate(fetchUserSchema as unknown as ValidationSchema),
+    validate(userUpdateSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const currentUser = res.locals.user as User;
+            const user = await getUser(uid);
+            if (currentUser.role.accessLevel < user.role.accessLevel) {
+                return next(new createHttpError.Unauthorized());
+            }
+            const body = req.body as Partial<BaseUser>;
+            const resp1 = await adminAuth.updateUser(uid, {
+                email: body.email,
+            });
+
+            if (body.role) {
+                getRole(body.role);
+            }
+
+            const resp2 = await adminDb.collection("users").doc(uid).update({
+                email: body.email,
+                name: body.name,
+                role: body.role,
+            });
+
+            return res.status(200).json({
+                ...resp1,
+                ...resp2,
+            });
+        } catch (e) {
             return next(e);
         }
     }

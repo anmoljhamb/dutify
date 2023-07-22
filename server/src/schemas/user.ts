@@ -9,6 +9,15 @@ export const userSignUpSchema = Yup.object({
     }),
 });
 
+export const userUpdateSchema = Yup.object({
+    body: Yup.object({
+        name: Yup.string().min(3).max(32),
+        email: Yup.string().email(),
+        password: Yup.string().min(6),
+        role: Yup.string().min(1).max(128),
+    }),
+});
+
 export const loginUserSchema = Yup.object({
     body: Yup.object({
         email: Yup.string().email().required(),
