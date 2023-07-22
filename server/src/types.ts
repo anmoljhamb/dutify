@@ -16,7 +16,14 @@ export interface BaseUser {
     role: string;
 }
 
-export type User = BaseUser & {
+export interface FetchedUser {
+    email: string;
+    name: string;
+    uid: string;
+    role: string;
+}
+
+export type User = FetchedUser & {
     role: Role;
 };
 

@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import { validate } from "../middleware";
+import { protectedRoute, validate } from "../middleware";
 import { loginUserSchema, userSignUpSchema } from "../schemas";
 import { BaseUser, ValidationSchema } from "../types";
 import createHttpError from "http-errors";
@@ -8,7 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 export const userRouter = express.Router();
 
-userRouter.get("/", async (_req, res, next) => {
+userRouter.get("/", protectedRoute, async (_req, res, next) => {
     try {
         const users = (await adminDb.collection("users").get()).docs.map(
             (doc) => {
