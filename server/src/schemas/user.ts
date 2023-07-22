@@ -2,17 +2,11 @@ import * as Yup from "yup";
 
 export const userSignUpSchema = Yup.object({
     body: Yup.object({
-        email: Yup.string().email("Enter a valid email").required(),
-        password: Yup.string()
-            .min(6, "The password needs to be atleast 6 letters long.")
-            .required(),
+        name: Yup.string().min(3).max(32).required(),
+        email: Yup.string().email().required(),
+        password: Yup.string().min(6).required(),
         role: Yup.string()
-            .oneOf(
-                [...new Array(7)].map((_, index) => `Level ${index + 1}`),
-                `The user needs to be one of the following: ${[...new Array(7)]
-                    .map((_, index) => `Level ${index + 1}`)
-                    .join()}`
-            )
+            .oneOf([...new Array(7)].map((_, index) => `Level ${index + 1}`))
             .required(),
     }),
 });

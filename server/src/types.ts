@@ -17,3 +17,10 @@ export type ValidationSchema = Yup.ObjectSchema<
     },
     Yup.AnyObject
 >;
+
+export interface User {
+    email: string;
+    name: string;
+    password: string;
+    role: string;
+}
