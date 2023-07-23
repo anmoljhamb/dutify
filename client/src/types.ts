@@ -1,5 +1,27 @@
 import { RawAxiosRequestHeaders } from "axios";
 import { User, UserCredential } from "firebase/auth";
+import * as Yup from "yup";
+
+export type FormField = {
+    name: string;
+    label: string;
+} & (OtherFormField | OptionFormField);
+
+interface OtherFormField {
+    type: "text" | "password";
+}
+
+interface OptionFormField {
+    type: "option";
+    choices: string[] | UserDetails[];
+    defaultValue?: string | UserDetails | null;
+}
+export type ValidationSchemaInterface = Yup.ObjectSchema<
+    { [key: string]: string },
+    Yup.AnyObject,
+    { [key: string]: undefined },
+    ""
+>;
 
 export interface BaseUser {
     email: string;
