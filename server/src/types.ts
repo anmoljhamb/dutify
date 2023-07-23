@@ -34,12 +34,12 @@ export interface Role {
 
 export type Roles = Record<string, Role>;
 
-export interface BaseProject {
+export interface BaseEvent {
     name: string;
     desc: string;
 }
 
-export type FetchedProject = BaseProject & {
+export type FetchedEvent = BaseEvent & {
     uid: string;
     done: boolean;
 };

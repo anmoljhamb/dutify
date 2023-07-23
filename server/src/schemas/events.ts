@@ -7,6 +7,13 @@ export const createEventSchema = Yup.object({
     }),
 });
 
+export const updateEventSchema = Yup.object({
+    body: Yup.object({
+        name: Yup.string().min(3).max(56),
+        desc: Yup.string().min(8).max(1000),
+    }),
+});
+
 export const fetchEventSchema = Yup.object({
     query: Yup.object({
         uid: Yup.string().min(1).max(128).required(),

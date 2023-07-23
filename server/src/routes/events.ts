@@ -1,7 +1,11 @@
 import express from "express";
 import { protectedRoute, validate } from "../middleware";
-import { createEventSchema, fetchEventSchema } from "../schemas";
-import { BaseProject, ValidationSchema } from "../types";
+import {
+    createEventSchema,
+    fetchEventSchema,
+    updateEventSchema,
+} from "../schemas";
+import { BaseEvent, ValidationSchema } from "../types";
 import { adminDb } from "../utils";
 
 export const eventRouter = express.Router();
@@ -51,7 +55,7 @@ eventRouter.post(
     validate(createEventSchema as unknown as ValidationSchema),
     async (req, res, next) => {
         try {
-            const { name, desc } = req.body as BaseProject;
+            const { name, desc } = req.body as BaseEvent;
             const docRef = adminDb.collection("events").doc();
             await docRef.set({ name, desc, uid: docRef.id, done: false });
             return res
@@ -89,6 +93,26 @@ eventRouter.get(
             const uid = req.query.uid as string;
             const resp = await adminDb.collection("events").doc(uid).update({
                 done: true,
+            });
+            return res.status(200).json(resp);
+        } catch (e) {
+            next(e);
+        }
+    }
+);
+
+eventRouter.patch(
+    "/",
+    protectedRoute,
+    validate(fetchEventSchema as unknown as ValidationSchema),
+    validate(updateEventSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const { name, desc } = req.body as Partial<BaseEvent>;
+            const resp = await adminDb.collection("events").doc(uid).update({
+                name,
+                desc,
             });
             return res.status(200).json(resp);
         } catch (e) {
