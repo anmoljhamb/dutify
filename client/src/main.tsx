@@ -16,6 +16,7 @@ import {
     COLOR_WARNING,
 } from "./constants";
 import { AuthProvider } from "./providers";
+import { BrowserRouter } from "react-router-dom";
 
 const theme = createTheme({
     palette: {
@@ -46,7 +47,9 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
         <AuthProvider>
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </AuthProvider>
     </ThemeProvider>
 );
