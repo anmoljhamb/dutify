@@ -12,6 +12,7 @@ import { useState } from "react";
 import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 import { getElementByUid } from "../../utils";
+import { DeleteTask } from ".";
 
 export const TasksList = ({
     tasks,
@@ -148,13 +149,13 @@ export const TasksList = ({
                     task={task!}
                 />
             )} */}
-            {/* <DeleteSite
-                deleteSite={deleteSite}
-                handleClose={() => setDeleteSite(false)}
-                site={tasks.filter((site) => site.uid === deleteKey).at(0)}
+            <DeleteTask
+                deleteTask={deleteTask}
+                handleClose={() => setDeleteTask(false)}
+                task={tasks.filter((task) => task.uid === deleteKey).at(0)}
                 loading={loading}
                 setLoading={setLoading}
-            /> */}
+            />
             <DataGrid
                 rows={tasks.map((task) => {
                     return { ...tasks, id: task.uid };
