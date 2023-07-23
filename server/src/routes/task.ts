@@ -138,18 +138,17 @@ taskRouter.patch(
     }
 );
 
-// eventRouter.delete(
-//     "/",
-//     protectedRoute,
-//     validate(fetchEventSchema as unknown as ValidationSchema),
-//     async (req, res, next) => {
-//         try {
-//             const uid = req.query.uid as string;
-//             const resp = await adminDb.collection("events").doc(uid).delete();
-//             // todo delete the tasks with projectId as the given id.
-//             return res.status(200).json(resp);
-//         } catch (e) {
-//             next(e);
-//         }
-//     }
-// );
+taskRouter.delete(
+    "/",
+    protectedRoute,
+    validate(fetchEventSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const resp = await adminDb.collection("tasks").doc(uid).delete();
+            return res.status(200).json(resp);
+        } catch (e) {
+            next(e);
+        }
+    }
+);
