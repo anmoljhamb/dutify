@@ -1,4 +1,10 @@
-import { Inbox, Logout, Mail } from "@mui/icons-material";
+import {
+    Logout,
+    Event as EventIcon,
+    Task,
+    TaskAlt,
+    Person,
+} from "@mui/icons-material";
 import {
     Divider,
     Drawer,
@@ -40,21 +46,41 @@ export const SideDrawer = () => {
                     </Typography>
                 </ListItem>
                 <Divider />
-                {["Inbox", "Starred", "Send email", "Drafts"].map(
-                    (text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <Inbox /> : <Mail />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    )
-                )}
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Task />
+                        </ListItemIcon>
+                        <ListItemText primary={"Tasks"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <EventIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Events"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <TaskAlt />
+                        </ListItemIcon>
+                        <ListItemText primary={"Assigned"} />
+                    </ListItemButton>
+                </ListItem>
             </List>
             <Divider />
             <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Person />
+                        </ListItemIcon>
+                        <ListItemText primary={"Account"} onClick={() => {}} />
+                    </ListItemButton>
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>

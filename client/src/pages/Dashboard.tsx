@@ -1,18 +1,12 @@
-import { Button } from "@mui/material";
-import { useContext } from "react";
-import { AuthContext } from "../contexts";
+import { useFetchProjects } from "../hooks";
 
 export const Dashboard = () => {
-    const authContext = useContext(AuthContext)!;
+    // const authContext = useContext(AuthContext)!;
+    const { events } = useFetchProjects();
 
     return (
         <div className="flex h-full flex-col items-center justify-center">
-            <Button variant="contained" onClick={authContext.logOut}>
-                Logout
-            </Button>
-            {authContext.userDetails?.email}
-            {authContext.userDetails?.role.roleName}
-            {authContext.userDetails?.role.accessLevel}
+            <h1> {events.length}</h1>
         </div>
     );
 };
