@@ -1,5 +1,5 @@
 export * from "./Dashboard";
-export * from "./ForgetPassword";
+export * from "./ForgotPassword";
 export * from "./LoadingPage";
 export * from "./Login";
 export * from "./SignUp";

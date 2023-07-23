@@ -3,7 +3,7 @@ import { Navbar } from "./components/shared";
 import { AuthContext } from "./contexts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ConditionalRoute } from "./components";
-import { Dashboard, ForgetPassword, Login, SignUp } from "./pages";
+import { Dashboard, ForgotPassword, Login, SignUp } from "./pages";
 
 const App = () => {
     const authContext = useContext(AuthContext)!;
@@ -43,7 +43,7 @@ const App = () => {
                     path="/forgot-password"
                     element={
                         <ConditionalRoute
-                            unProtectedElement={<ForgetPassword />}
+                            unProtectedElement={<ForgotPassword />}
                             loggedInElement={<Navigate to={"/"} />}
                         />
                     }
