@@ -43,3 +43,10 @@ export type FetchedEvent = BaseEvent & {
     uid: string;
     done: boolean;
 };
+
+export interface BaseTask {
+    name: string;
+    desc: string;
+    projectId: string;
+    assignedTo: string;
+}
