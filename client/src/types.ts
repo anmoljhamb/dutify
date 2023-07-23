@@ -102,4 +102,5 @@ export interface RoleContextInterface {
     getRole(uid: string): Role;
     roles: Record<string, Role>;
     rolesChoices: AutoCompleteOption[];
+    getRoleByAccessLevel(arg0: number): Role;
 }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts";
+import { AuthContext, RoleContext } from "../contexts";
 import { AuthContextInterface, UserDetails } from "../types";
 import axios from "axios";
 import { BACKEND_URI } from "../constants";
@@ -13,7 +13,8 @@ export const useFetchUsers = ({
 }) => {
     const [users, setUsers] = useState<UserDetails[]>([]);
 
-    const authContext = useContext(AuthContext) as AuthContextInterface;
+    const authContext = useContext(AuthContext)!;
+    const roleContext = useContext(RoleContext)!;
 
     useEffect(() => {
         axios
@@ -21,7 +22,16 @@ export const useFetchUsers = ({
                 headers: authContext.headers,
             })
             .then((resp) => {
-                setUsers(resp.data as UserDetails[]);
+                let temp = resp.data as UserDetails[];
+                temp = temp.map((user) => {
+                    return {
+                        ...user,
+                        role: roleContext.getRoleByAccessLevel(
+                            user.role.accessLevel
+                        ),
+                    } as UserDetails;
+                });
+                setUsers(temp);
             })
             .catch((err) => {
                 console.trace(err);

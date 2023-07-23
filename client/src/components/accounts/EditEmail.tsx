@@ -1,12 +1,11 @@
 import { Button, Divider, Modal, Typography } from "@mui/material";
-import { FirebaseError } from "firebase/app";
+import axios from "axios";
 import { useContext, useState } from "react";
 import { Form } from "../../components";
+import { BACKEND_URI } from "../../constants";
 import { AuthContext, MessageContext } from "../../contexts";
 import { AuthContextInterface, MessageContextInterface } from "../../types";
 import { loginSchema } from "../../validators";
-import axios from "axios";
-import { BACKEND_URI } from "../../constants";
 
 interface PropsInterface {
     open: boolean;

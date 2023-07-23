@@ -17,6 +17,7 @@ export const RoleProvider = ({ children }: PropsInterface) => {
         const unsub = onSnapshot(collection(db, "roles"), (docsRef) => {
             docsRef.docs.forEach((doc) => {
                 setRoles((old) => {
+                    console.log("setting roles");
                     return { ...old, [doc.id]: doc.data() as Role };
                 });
             });
@@ -47,8 +48,20 @@ export const RoleProvider = ({ children }: PropsInterface) => {
         return roles[uid]!;
     };
 
+    const getRoleByAccessLevel = (accessLevel: number) => {
+        let role: Role = { accessLevel, roleName: "asd" };
+        Object.keys(roles).forEach((key) => {
+            if (roles[key].accessLevel === accessLevel) {
+                role = roles[key];
+            }
+        });
+        return role;
+    };
+
     return (
-        <RoleContext.Provider value={{ getRole, roles, rolesChoices }}>
+        <RoleContext.Provider
+            value={{ getRole, roles, rolesChoices, getRoleByAccessLevel }}
+        >
             {loading && <LoadingPage />}
             {!loading && children}
         </RoleContext.Provider>
