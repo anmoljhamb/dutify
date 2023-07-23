@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+$bg: #2f282d;
+$text: #f7f6f4;
+
 @layer base {
     :root {
         --primary: #5b506b;
@@ -12,5 +15,11 @@
         --success: #519358;
         --warning: #ce8220;
         --error: #f44336;
+    }
+    #root {
+        height: 100vh;
+        background-color: $bg;
+        display: flex;
+        flex-direction: column;
     }
 }

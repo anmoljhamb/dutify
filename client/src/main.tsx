@@ -15,7 +15,7 @@ import {
     COLOR_SUCCESS,
     COLOR_WARNING,
 } from "./constants";
-import { AuthProvider } from "./providers";
+import { AuthProvider, MessageProvider } from "./providers";
 import { BrowserRouter } from "react-router-dom";
 
 const theme = createTheme({
@@ -46,10 +46,12 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
-        <AuthProvider>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </AuthProvider>
+        <MessageProvider>
+            <AuthProvider>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </AuthProvider>
+        </MessageProvider>
     </ThemeProvider>
 );
