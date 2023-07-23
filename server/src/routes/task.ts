@@ -11,11 +11,14 @@ import { adminDb } from "../utils";
 export const taskRouter = express.Router();
 
 taskRouter.get("/", protectedRoute, async (req, res, next) => {
-    // todo fetch only the tasks that have been created by a given user.
     try {
-        const resp = (await adminDb.collection("tasks").get()).docs.map((doc) =>
-            doc.data()
-        );
+        const currentUser = res.locals.user as User;
+        const resp = (
+            await adminDb
+                .collection("tasks")
+                .where("userId", "==", currentUser.uid)
+                .get()
+        ).docs.map((doc) => doc.data());
         return res.status(200).json(resp);
     } catch (e) {
         next(e);
