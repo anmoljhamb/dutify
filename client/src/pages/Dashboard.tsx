@@ -6,7 +6,7 @@ export const Dashboard = () => {
 
     return (
         <div className="flex h-full flex-col items-center justify-center">
-            <h1> {events.length}</h1>
+            {/* <h1> {events.length}</h1> */}
         </div>
     );
 };
