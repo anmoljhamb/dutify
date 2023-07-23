@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EventsList, ImageBg } from "../components";
+import { CreateEvent, EventsList, ImageBg } from "../components";
 import { useFetchEvents } from "../hooks";
 import { Button, CircularProgress, Divider, Typography } from "@mui/material";
 
@@ -30,18 +30,15 @@ export const EventsPage = () => {
                         color="secondary"
                         onClick={() => setAddEvent(true)}
                     >
-                        Add New Site
+                        Add New Event
                     </Button>
                 </div>
-                {/* {!loading && users.length !== 0 && (
-                    <CreateSite
-                        loading={sitesFetch}
-                        setLoading={setSitesFetch}
-                        addSite={addSite}
-                        handleClose={() => setAddEvent(false)}
-                        users={users}
-                    />
-                )} */}
+                <CreateEvent
+                    loading={eventsFetch}
+                    setLoading={setEventsFetch}
+                    addEvent={addEvent}
+                    handleClose={() => setAddEvent(false)}
+                />
                 {loading && (
                     <div className="flex justify-center">
                         <CircularProgress color="secondary" />

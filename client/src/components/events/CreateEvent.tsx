@@ -7,49 +7,32 @@ import {
 } from "@mui/material";
 import { Form } from "..";
 import { AuthContext, MessageContext } from "../../contexts";
-import { FormField, UserDetails, ValidationSchemaInterface } from "../../types";
+import { ValidationSchemaInterface } from "../../types";
 // import { createSiteSchema } from "@validators";
 import axios, { AxiosError } from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { BACKEND_URI } from "../../constants";
-import { removeFalseyValues } from "../../utils";
 import { createEventSchema } from "../../validators/createEventSchema";
 
 interface PropsInterface {
-    addSite: boolean;
+    addEvent: boolean;
     handleClose(): void;
     loading: boolean;
     setLoading(arg0: boolean): void;
-    users: UserDetails[];
 }
 
-export const CreateSite = ({
-    addSite,
+export const CreateEvent = ({
+    addEvent,
     handleClose,
     loading,
     setLoading,
-    users,
 }: PropsInterface) => {
-    const [formFields, setFormFields] = useState<FormField[]>([]);
-
     const { showMessage } = useContext(MessageContext)!;
     const authContext = useContext(AuthContext)!;
 
-    useEffect(() => {
-        if (users.length === 0) return;
-        setFormFields([
-            { label: "Name", name: "name", type: "text" },
-            { label: "Channel ID", name: "channel", type: "text" },
-            { label: "API Key", name: "apiKey", type: "text" },
-            { label: "Latitude", name: "lat", type: "text" },
-            { label: "Longitude", name: "long", type: "text" },
-            // { label: "testlabel", name: "long", type: "option" },
-        ]);
-    }, [users]);
-
     return (
         <Dialog
-            open={addSite}
+            open={addEvent}
             onClose={
                 loading
                     ? () => {
@@ -62,40 +45,41 @@ export const CreateSite = ({
             }
             color="primary"
         >
-            <DialogTitle>Add a new Site</DialogTitle>
+            <DialogTitle>Add a new Event</DialogTitle>
             <DialogContent>
                 <Form
                     buttonText="Create Site"
                     loading={loading}
                     initialValues={{
                         name: "",
-                        channel: "",
-                        apiKey: "",
-                        lat: "",
-                        long: "",
-                        guest: "",
-                        hod: "",
-                        xen: "",
-                        je: "",
-                        ae: "",
-                        operator: "",
+                        desc: "",
                     }}
                     validationSchema={
                         createEventSchema as unknown as ValidationSchemaInterface
                     }
-                    formFields={formFields}
+                    formFields={[
+                        {
+                            type: "text",
+                            label: "Name",
+                            name: "name",
+                        },
+                        {
+                            type: "text",
+                            label: "Description",
+                            name: "desc",
+                        },
+                    ]}
                     onSubmit={(values: Record<string, string>) => {
                         setLoading(true);
                         axios
-                            .post(
-                                `${BACKEND_URI}/site`,
-                                removeFalseyValues(values),
-                                {
-                                    headers: authContext.headers,
-                                }
-                            )
+                            .post(`${BACKEND_URI}/event`, values, {
+                                headers: authContext.headers,
+                            })
                             .then((resp) => {
-                                showMessage(resp.data.message, "success");
+                                showMessage(
+                                    "The event was created successfully!",
+                                    "success"
+                                );
                                 handleClose();
                             })
                             .catch((e) => {
