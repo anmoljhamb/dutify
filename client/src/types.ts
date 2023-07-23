@@ -71,6 +71,12 @@ export interface BaseTask {
     assignedTo: string;
 }
 
+export type FetchedTask = BaseTask & {
+    userId: string;
+    uid: string;
+    done: boolean;
+};
+
 export interface AuthContextInterface {
     currentUser: User | null;
     logIn(email: string, password: string): Promise<UserCredential>;

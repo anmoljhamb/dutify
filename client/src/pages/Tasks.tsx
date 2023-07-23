@@ -1,7 +1,7 @@
+import { Button, CircularProgress, Divider, Typography } from "@mui/material";
 import { useState } from "react";
-import { CreateTask, ImageBg } from "../components";
+import { CreateTask, ImageBg, TasksList } from "../components";
 import { useFetchEvents, useFetchTasks, useFetchUsers } from "../hooks";
-import { Typography, Divider, Button, CircularProgress } from "@mui/material";
 
 export const Tasks = () => {
     const [eventsLoading, setEventsLoading] = useState<boolean>(true);
@@ -52,16 +52,17 @@ export const Tasks = () => {
                 {tasks.length === 0 && !loading && (
                     <p className="text-center text-error">No Task Was Found</p>
                 )}
-                {/* {!loading && tasks.length > 0 && (
+                {!loading && tasks.length > 0 && (
                     <div className="h-full text-bgColor">
                         <TasksList
                             tasks={tasks}
                             loading={tasksFetch}
                             setLoading={setTasksFetch}
                             events={events}
+                            users={users}
                         />
                     </div>
-                )} */}
+                )}
             </div>
         </div>
     );

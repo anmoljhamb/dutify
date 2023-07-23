@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { BACKEND_URI } from "../constants";
 import { AuthContext } from "../contexts";
-import { FetchedEvent } from "../types";
+import { FetchedTask } from "../types";
 
 export const useFetchTasks = ({
     tasksFetch,
@@ -12,7 +12,7 @@ export const useFetchTasks = ({
     setLoading(arg0: boolean): void;
 }) => {
     const authContext = useContext(AuthContext)!;
-    const [tasks, setTasks] = useState<FetchedEvent[]>([]);
+    const [tasks, setTasks] = useState<FetchedTask[]>([]);
 
     useEffect(() => {
         setLoading(true);

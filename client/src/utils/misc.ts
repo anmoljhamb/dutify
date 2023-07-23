@@ -1,3 +1,5 @@
+import { UserDetails } from "../types";
+
 export const objectLength = <T extends Record<PropertyKey, unknown>>(
     obj: T
 ) => {
@@ -13,4 +15,11 @@ export const removeFalseyValues = <T extends object>(obj: T) => {
         }
     });
     return newObj;
+};
+
+export const getElementByUid = <T extends { uid: string }>(
+    arr: T[],
+    uid: string
+) => {
+    return arr.filter((el) => el.uid === uid).at(0)!;
 };
