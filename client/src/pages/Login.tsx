@@ -16,11 +16,7 @@ export const Login = () => {
         setLoading(true);
         try {
             await authContext.logIn(values.email, values.password);
-            showMessage(
-                "Logged In Successfully! Redirecting in a couple of seconds.",
-                "success"
-            );
-            // * The reason we don't need a setTimeout and a navigator after login, is because our app router, gets rerendered after a user is logged in, and, when the app Router is logged in, it sees that the /login link should only be accessed when the user is logged out, and the user is redirected to the / immediately.
+            showMessage("Logged In Successfully!", "success");
         } catch (err) {
             if (err instanceof FirebaseError) {
                 if (err.code === "auth/user-not-found") {

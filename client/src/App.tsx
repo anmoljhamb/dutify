@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Navbar } from "./components/shared";
+import { Navbar, SideDrawer } from "./components/shared";
 import { AuthContext } from "./contexts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ConditionalRoute } from "./components";
@@ -10,6 +10,7 @@ const App = () => {
 
     return (
         <>
+            {authContext.currentUser && <SideDrawer />}
             {!authContext.currentUser && <Navbar />}
             <Routes>
                 <Route
