@@ -8,7 +8,7 @@ import {
     GridValueGetterParams,
 } from "@mui/x-data-grid";
 import { useState } from "react";
-import { DeleteEvent } from ".";
+import { DeleteEvent, EditEvent } from ".";
 import { FetchedEvent } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 // import { getUserByUid } from "../../utils";
@@ -21,11 +21,11 @@ export const EventsList = ({
     loading: boolean;
     setLoading: (arg0: boolean) => void;
 }) => {
-    const [editSite, setEditSite] = useState<boolean>(false);
+    const [editEvent, setEditEvent] = useState<boolean>(false);
     const [deleteSite, setDeleteSite] = useState<boolean>(false);
     const [, setEditKey] = useState<string>("");
     const [deleteKey, setDeleteKey] = useState<string>("");
-    const [site, setSite] = useState<FetchedEvent | null>(null);
+    const [event, setEvent] = useState<FetchedEvent | null>(null);
 
     const getDetailsFromParams = (
         params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -63,9 +63,9 @@ export const EventsList = ({
     const handleEdit = (key: string) => {
         return () => {
             setEditKey(key);
-            setEditSite(true);
+            setEditEvent(true);
             const tempSite = events.filter((site) => site.uid === key).at(0)!;
-            setSite(tempSite);
+            setEvent(tempSite);
         };
     };
 
@@ -119,16 +119,15 @@ export const EventsList = ({
 
     return (
         <>
-            {/* {editSite && site !== null && (
-                <EditSite
+            {editEvent && event !== null && (
+                <EditEvent
                     loading={loading}
                     setLoading={setLoading}
-                    editSite={editSite}
-                    handleClose={() => setEditSite(false)}
-                    users={users}
-                    site={site!}
+                    editEvent={editEvent}
+                    handleClose={() => setEditEvent(false)}
+                    event={event!}
                 />
-            )} */}
+            )}
             <DeleteEvent
                 deleteSite={deleteSite}
                 handleClose={() => setDeleteSite(false)}
