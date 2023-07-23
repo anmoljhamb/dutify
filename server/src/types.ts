@@ -33,3 +33,13 @@ export interface Role {
 }
 
 export type Roles = Record<string, Role>;
+
+export interface BaseProject {
+    name: string;
+    desc: string;
+}
+
+export type FetchedProject = BaseProject & {
+    uid: string;
+    done: boolean;
+};
