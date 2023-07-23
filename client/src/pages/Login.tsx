@@ -72,7 +72,7 @@ export const Login = () => {
                         },
                     ]}
                 />
-                <Button onClick={() => navigator("/forgotPassword")}>
+                <Button onClick={() => navigator("/forgot-password")}>
                     Forgot Password?
                 </Button>
             </div>

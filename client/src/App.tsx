@@ -40,7 +40,7 @@ const App = () => {
                     }
                 />
                 <Route
-                    path="/forget-password"
+                    path="/forgot-password"
                     element={
                         <ConditionalRoute
                             unProtectedElement={<ForgetPassword />}
