@@ -1,8 +1,12 @@
 import { Autocomplete, Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { Fragment } from "react";
+import {
+    AutoCompleteOption,
+    FormField,
+    ValidationSchemaInterface,
+} from "../../types";
 import { objectLength } from "../../utils";
-import { FormField, UserDetails, ValidationSchemaInterface } from "../../types";
 
 interface PropsInterface {
     initialValues: Record<string, string>;
@@ -38,26 +42,19 @@ export const Form = ({
                                     id={field.name}
                                     disablePortal
                                     options={field.choices}
-                                    defaultValue={field.defaultValue}
                                     getOptionLabel={(
-                                        option: string | UserDetails
+                                        option: AutoCompleteOption
                                     ) => {
                                         if (typeof option === "string") {
                                             return option;
                                         }
-                                        return option.email;
+                                        return option.label;
                                     }}
                                     onChange={(_e, option) => {
-                                        if (typeof option === "string") {
-                                            formik.setFieldValue(
-                                                field.name,
-                                                option
-                                            );
-                                        } else
-                                            formik.setFieldValue(
-                                                field.name,
-                                                option?.uid
-                                            );
+                                        formik.setFieldValue(
+                                            field.name,
+                                            option?.value
+                                        );
                                     }}
                                     renderInput={(params) => (
                                         <TextField

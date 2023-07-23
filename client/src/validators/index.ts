@@ -1,5 +1,4 @@
 export * from "./common";
-export * from "./createNewUser";
 export * from "./editName";
 export * from "./editPassword";
 export * from "./email";

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
 import { RoleContext } from "../contexts";
-import { LoadingPage } from "../pages";
-import { Role } from "../types";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { LoadingPage } from "../pages";
+import { AutoCompleteOption, Role } from "../types";
 
 interface PropsInterface {
     children: React.ReactNode;
@@ -25,12 +25,30 @@ export const RoleProvider = ({ children }: PropsInterface) => {
         return unsub;
     }, []);
 
+    const rolesChoices = useMemo(() => {
+        const temp: AutoCompleteOption[] = [];
+        Object.keys(roles).forEach((key) => {
+            temp.push({
+                label: roles[key].roleName,
+                value: key,
+            });
+        });
+        return temp.sort((a, b) => {
+            if (a.label < b.label) {
+                return -1;
+            } else if (b.label > a.label) {
+                return 1;
+            }
+            return 0;
+        });
+    }, [roles]);
+
     const getRole = (uid: string) => {
         return roles[uid]!;
     };
 
     return (
-        <RoleContext.Provider value={{ getRole }}>
+        <RoleContext.Provider value={{ getRole, roles, rolesChoices }}>
             {loading && <LoadingPage />}
             {!loading && children}
         </RoleContext.Provider>

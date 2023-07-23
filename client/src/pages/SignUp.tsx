@@ -1,26 +1,26 @@
-import { Typography, Divider, Button } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
+import axios from "axios";
 import { FirebaseError } from "firebase/app";
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ImageBg, Form } from "../components";
-import { AuthContext, MessageContext } from "../contexts";
-import { loginSchema } from "../validators";
+import { Form, ImageBg } from "../components";
+import { BACKEND_URI } from "../constants";
+import { MessageContext, RoleContext } from "../contexts";
+import { signUpSchema } from "../validators/signUp";
 
 export const SignUp = () => {
     const [loading, setLoading] = useState<boolean>(false);
-    const authContext = useContext(AuthContext)!;
     const { showMessage } = useContext(MessageContext)!;
     const navigator = useNavigate();
+    const roleContext = useContext(RoleContext)!;
 
     const onSubmit = async (values: Record<string, string>) => {
         setLoading(true);
         try {
-            await authContext.logIn(values.email, values.password);
-            showMessage(
-                "Logged In Successfully! Redirecting in a couple of seconds.",
-                "success"
-            );
-            // * The reason we don't need a setTimeout and a navigator after login, is because our app router, gets rerendered after a user is logged in, and, when the app Router is logged in, it sees that the /login link should only be accessed when the user is logged out, and the user is redirected to the / immediately.
+            const resp = await axios.post(`${BACKEND_URI}/user/signup`, values);
+            console.log(resp.data);
+            showMessage("User Created Successfully! Please Login.", "success");
+            navigator("/login");
         } catch (err) {
             if (err instanceof FirebaseError) {
                 if (err.code === "auth/user-not-found") {
@@ -51,15 +51,20 @@ export const SignUp = () => {
                 </Typography>
                 <Divider className="m-4" />
                 <Form
-                    buttonText="Login"
+                    buttonText="Create Account"
                     loading={loading}
                     onSubmit={onSubmit}
                     initialValues={{
                         email: "",
                         password: "",
                     }}
-                    validationSchema={loginSchema}
+                    validationSchema={signUpSchema}
                     formFields={[
+                        {
+                            label: "Enter your name",
+                            name: "name",
+                            type: "text",
+                        },
                         {
                             label: "Enter your Email",
                             name: "email",
@@ -68,7 +73,13 @@ export const SignUp = () => {
                         {
                             label: "Enter your password",
                             name: "password",
-                            type: "password",
+                            type: "text",
+                        },
+                        {
+                            type: "option",
+                            label: "User Role",
+                            choices: roleContext.rolesChoices,
+                            name: "role",
                         },
                     ]}
                 />

@@ -11,11 +11,17 @@ interface OtherFormField {
     type: "text" | "password";
 }
 
+export interface AutoCompleteOption {
+    label: string;
+    value: string;
+}
+
 interface OptionFormField {
     type: "option";
-    choices: string[] | UserDetails[];
-    defaultValue?: string | UserDetails | null;
+    choices: AutoCompleteOption[];
+    defaultValue?: string | UserDetails | null | Role;
 }
+
 export type ValidationSchemaInterface = Yup.ObjectSchema<
     { [key: string]: string },
     Yup.AnyObject,
@@ -88,4 +94,6 @@ export interface MessageContextInterface {
 
 export interface RoleContextInterface {
     getRole(uid: string): Role;
+    roles: Record<string, Role>;
+    rolesChoices: AutoCompleteOption[];
 }
