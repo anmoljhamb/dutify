@@ -7,8 +7,9 @@ import {
     GridTreeNodeWithRender,
     GridValueGetterParams,
 } from "@mui/x-data-grid";
-import { UserDetails, FetchedEvent } from "../../types";
 import { useState } from "react";
+import { DeleteEvent } from ".";
+import { FetchedEvent } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 // import { getUserByUid } from "../../utils";
 export const EventsList = ({
@@ -127,14 +128,14 @@ export const EventsList = ({
                     users={users}
                     site={site!}
                 />
-            )}
-            <DeleteSite
+            )} */}
+            <DeleteEvent
                 deleteSite={deleteSite}
                 handleClose={() => setDeleteSite(false)}
-                site={events.filter((site) => site.uid === deleteKey).at(0)}
+                event={events.filter((site) => site.uid === deleteKey).at(0)}
                 loading={loading}
                 setLoading={setLoading}
-            /> */}
+            />
             <DataGrid
                 rows={events.map((user) => {
                     return { ...events, id: user.uid };
