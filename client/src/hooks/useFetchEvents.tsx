@@ -22,7 +22,6 @@ export const useFetchEvents = ({
             })
             .then((resp) => {
                 setEvents(resp.data);
-                console.log(resp.data);
             })
             .catch((e) => {
                 console.log(e);

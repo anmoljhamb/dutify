@@ -17,7 +17,7 @@ export const useFetchTasks = ({
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`${BACKEND_URI}/tasks`, {
+            .get(`${BACKEND_URI}/task`, {
                 headers: authContext.headers,
             })
             .then((resp) => {
