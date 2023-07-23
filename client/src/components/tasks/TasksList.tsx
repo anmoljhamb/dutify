@@ -42,6 +42,9 @@ export const TasksList = ({
     const valueGetter = (key: string) => {
         return (params: GridValueGetterParams) => {
             const temp = getDetailsFromParams(params);
+            if (key === "done") {
+                return temp?.done ? "Complete" : "Incomplete";
+            }
             return temp?.[key as keyof FetchedTask] || "NA";
         };
     };
@@ -119,6 +122,13 @@ export const TasksList = ({
             headerName: "Description",
             valueGetter: valueGetter("desc"),
             flex: 4,
+            align: "left",
+        },
+        {
+            field: "status",
+            headerName: "Status",
+            valueGetter: valueGetter("done"),
+            flex: 2,
             align: "left",
         },
         {

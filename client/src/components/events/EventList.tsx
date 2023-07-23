@@ -101,13 +101,13 @@ export const EventsList = ({
             flex: 2,
             align: "left",
         },
-        {
-            field: "done",
-            headerName: "Status",
-            valueGetter: valueGetter("done"),
-            flex: 2,
-            align: "left",
-        },
+        // {
+        //     field: "done",
+        //     headerName: "Status",
+        //     valueGetter: valueGetter("done"),
+        //     flex: 2,
+        //     align: "left",
+        // },
         {
             field: "desc",
             headerName: "Description",
