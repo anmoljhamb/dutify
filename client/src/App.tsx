@@ -3,7 +3,14 @@ import { Navbar, SideDrawer } from "./components/shared";
 import { AuthContext } from "./contexts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ConditionalRoute } from "./components";
-import { Dashboard, ForgotPassword, Login, SignUp, Tasks } from "./pages";
+import {
+    Dashboard,
+    EventsPage,
+    ForgotPassword,
+    Login,
+    SignUp,
+    Tasks,
+} from "./pages";
 
 const App = () => {
     const authContext = useContext(AuthContext)!;
@@ -18,6 +25,15 @@ const App = () => {
                     element={
                         <ConditionalRoute
                             loggedInElement={<Dashboard />}
+                            unProtectedElement={<Navigate to={"/login"} />}
+                        />
+                    }
+                />
+                <Route
+                    path="/events"
+                    element={
+                        <ConditionalRoute
+                            loggedInElement={<EventsPage />}
                             unProtectedElement={<Navigate to={"/login"} />}
                         />
                     }

@@ -4,13 +4,18 @@ import { BACKEND_URI } from "../constants";
 import { AuthContext } from "../contexts";
 import { FetchedEvent } from "../types";
 
-export const useFetchProjects = () => {
-    const [isLoading, setIsLoading] = useState(true);
+export const useFetchEvents = ({
+    eventsFetch,
+    setLoading,
+}: {
+    eventsFetch?: boolean;
+    setLoading(arg0: boolean): void;
+}) => {
     const authContext = useContext(AuthContext)!;
     const [events, setEvents] = useState<FetchedEvent[]>([]);
 
     useEffect(() => {
-        setIsLoading(true);
+        setLoading(true);
         axios
             .get(`${BACKEND_URI}/event`, {
                 headers: authContext.headers,
@@ -23,9 +28,9 @@ export const useFetchProjects = () => {
                 console.log(e);
             })
             .finally(() => {
-                setIsLoading(false);
+                setLoading(false);
             });
-    }, [authContext.headers]);
+    }, [authContext.headers, eventsFetch, setLoading]);
 
-    return { isLoading, events };
+    return events;
 };

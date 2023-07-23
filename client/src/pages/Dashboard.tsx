@@ -1,8 +1,8 @@
-import { useFetchProjects } from "../hooks";
+import { useFetchEvents } from "../hooks";
 
 export const Dashboard = () => {
     // const authContext = useContext(AuthContext)!;
-    const { events } = useFetchProjects();
+    const { events } = useFetchEvents();
 
     return (
         <div className="flex h-full flex-col items-center justify-center">

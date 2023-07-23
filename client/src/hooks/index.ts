@@ -1,1 +1,1 @@
-export * from "./useFetchProjects";
+export * from "./useFetchEvents";

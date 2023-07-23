@@ -1,10 +1,4 @@
-import {
-    Event as EventIcon,
-    Logout,
-    Person,
-    Task,
-    TaskAlt,
-} from "@mui/icons-material";
+import { Event as EventIcon, Logout, Person, Task } from "@mui/icons-material";
 import {
     Divider,
     Drawer,
@@ -58,7 +52,7 @@ export const SideDrawer = () => {
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => navigator("/events")}>
                         <ListItemIcon>
                             <EventIcon />
                         </ListItemIcon>
@@ -66,9 +60,9 @@ export const SideDrawer = () => {
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => navigator("/assigned")}>
                         <ListItemIcon>
-                            <TaskAlt />
+                            <Task />
                         </ListItemIcon>
                         <ListItemText primary={"Assigned"} />
                     </ListItemButton>
