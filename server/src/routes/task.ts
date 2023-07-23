@@ -48,6 +48,40 @@ taskRouter.get("/complete", protectedRoute, async (req, res, next) => {
     return res.status(200).json({ message: "working..." });
 });
 
+taskRouter.get(
+    "/undo",
+    protectedRoute,
+    validate(fetchEventSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const resp = await adminDb.collection("tasks").doc(uid).update({
+                done: false,
+            });
+            return res.status(200).json(resp);
+        } catch (e) {
+            next(e);
+        }
+    }
+);
+
+taskRouter.get(
+    "/done",
+    protectedRoute,
+    validate(fetchEventSchema as unknown as ValidationSchema),
+    async (req, res, next) => {
+        try {
+            const uid = req.query.uid as string;
+            const resp = await adminDb.collection("tasks").doc(uid).update({
+                done: true,
+            });
+            return res.status(200).json(resp);
+        } catch (e) {
+            next(e);
+        }
+    }
+);
+
 taskRouter.post(
     "/",
     protectedRoute,
@@ -64,6 +98,7 @@ taskRouter.post(
                 assignedTo,
                 userId: currentUser.uid,
                 done: false,
+                uid: docRef.id,
             });
             return res.status(200).json({
                 name,
@@ -72,6 +107,7 @@ taskRouter.post(
                 assignedTo,
                 userId: currentUser.uid,
                 done: false,
+                uid: docRef.id,
             });
         } catch (e) {
             next(e);
