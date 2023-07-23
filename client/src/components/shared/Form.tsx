@@ -42,6 +42,7 @@ export const Form = ({
                                     id={field.name}
                                     disablePortal
                                     options={field.choices}
+                                    defaultValue={field.defaultValue}
                                     getOptionLabel={(
                                         option: AutoCompleteOption
                                     ) => {

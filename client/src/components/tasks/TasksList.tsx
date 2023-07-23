@@ -12,7 +12,7 @@ import { useState } from "react";
 import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 import { getElementByUid } from "../../utils";
-import { DeleteTask } from ".";
+import { DeleteTask, EditTask } from ".";
 
 export const TasksList = ({
     tasks,
@@ -139,16 +139,17 @@ export const TasksList = ({
 
     return (
         <>
-            {/* {editTask && task !== null && (
+            {editTask && task !== null && (
                 <EditTask
                     loading={loading}
                     setLoading={setLoading}
                     editTask={editTask}
                     handleClose={() => setEditTask(false)}
                     users={users}
+                    events={events}
                     task={task!}
                 />
-            )} */}
+            )}
             <DeleteTask
                 deleteTask={deleteTask}
                 handleClose={() => setDeleteTask(false)}

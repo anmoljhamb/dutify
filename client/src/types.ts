@@ -19,7 +19,7 @@ export interface AutoCompleteOption {
 interface OptionFormField {
     type: "option";
     choices: AutoCompleteOption[];
-    defaultValue?: string | UserDetails | null | Role;
+    defaultValue?: AutoCompleteOption;
 }
 
 export type ValidationSchemaInterface = Yup.ObjectSchema<
