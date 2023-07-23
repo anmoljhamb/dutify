@@ -4,6 +4,7 @@ import { AuthContext } from "./contexts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ConditionalRoute } from "./components";
 import {
+    AssignedTask,
     Dashboard,
     EventsPage,
     ForgotPassword,
@@ -43,6 +44,15 @@ const App = () => {
                     element={
                         <ConditionalRoute
                             loggedInElement={<Tasks />}
+                            unProtectedElement={<Navigate to={"/login"} />}
+                        />
+                    }
+                />
+                <Route
+                    path="/assigned"
+                    element={
+                        <ConditionalRoute
+                            loggedInElement={<AssignedTask />}
                             unProtectedElement={<Navigate to={"/login"} />}
                         />
                     }
