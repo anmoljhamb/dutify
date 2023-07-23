@@ -4,6 +4,7 @@ import { AuthContext } from "./contexts";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ConditionalRoute } from "./components";
 import {
+    AccountPage,
     AssignedTask,
     Dashboard,
     EventsPage,
@@ -25,7 +26,7 @@ const App = () => {
                     path="/"
                     element={
                         <ConditionalRoute
-                            loggedInElement={<Dashboard />}
+                            loggedInElement={<Navigate to={"/events"} />}
                             unProtectedElement={<Navigate to={"/login"} />}
                         />
                     }
@@ -57,6 +58,16 @@ const App = () => {
                         />
                     }
                 />
+                <Route
+                    path="/account"
+                    element={
+                        <ConditionalRoute
+                            loggedInElement={<AccountPage />}
+                            unProtectedElement={<Navigate to={"/login"} />}
+                        />
+                    }
+                />
+                j
                 <Route
                     path="/login"
                     element={

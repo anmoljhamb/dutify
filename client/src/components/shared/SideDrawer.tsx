@@ -71,28 +71,27 @@ export const SideDrawer = () => {
             <Divider />
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => navigator("/account")}>
                         <ListItemIcon>
                             <Person />
                         </ListItemIcon>
-                        <ListItemText primary={"Account"} onClick={() => {}} />
+                        <ListItemText primary={"Account"} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton
+                        onClick={() => {
+                            showMessage(
+                                "User Logged out successfully!",
+                                "info"
+                            );
+                            authContext.logOut();
+                        }}
+                    >
                         <ListItemIcon>
                             <Logout />
                         </ListItemIcon>
-                        <ListItemText
-                            primary={"Logout"}
-                            onClick={() => {
-                                showMessage(
-                                    "User Logged out successfully!",
-                                    "info"
-                                );
-                                authContext.logOut();
-                            }}
-                        />
+                        <ListItemText primary={"Logout"} />
                     </ListItemButton>
                 </ListItem>
             </List>

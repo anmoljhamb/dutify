@@ -1,3 +1,4 @@
+export * from "./Account";
 export * from "./AssignedTasks";
 export * from "./Dashboard";
 export * from "./EventsPage";
