@@ -17,7 +17,7 @@ userRouter.get("/", protectedRoute, async (_req, res, next) => {
     try {
         const currentUser = res.locals.user as User;
 
-        let users = (await adminDb.collection("users").get()).docs.map(
+        let users = (await adminDb.collection("usersDetails").get()).docs.map(
             (doc) => {
                 return {
                     ...doc.data(),
@@ -50,7 +50,10 @@ userRouter.post(
             );
             const currentUser = clientAuth.currentUser!;
             const userDetails = (
-                await adminDb.collection("users").doc(currentUser.uid).get()
+                await adminDb
+                    .collection("usersDetails")
+                    .doc(currentUser.uid)
+                    .get()
             ).data() as BaseUser;
             return res.status(200).json({
                 ...userDetails,
@@ -76,7 +79,7 @@ userRouter.delete(
                 return next(new createHttpError.Unauthorized());
             }
             await adminAuth.deleteUser(uid);
-            await adminDb.collection("users").doc(uid).delete();
+            await adminDb.collection("usersDetails").doc(uid).delete();
             return res
                 .status(200)
                 .json({ message: "The user was deleted successfully!" });
@@ -108,11 +111,14 @@ userRouter.patch(
                 getRole(body.role);
             }
 
-            const resp2 = await adminDb.collection("users").doc(uid).update({
-                email: body.email,
-                name: body.name,
-                role: body.role,
-            });
+            const resp2 = await adminDb
+                .collection("usersDetails")
+                .doc(uid)
+                .update({
+                    email: body.email,
+                    name: body.name,
+                    role: body.role,
+                });
 
             return res.status(200).json({
                 ...resp1,
@@ -137,7 +143,7 @@ userRouter.post(
                 password: user.password,
             });
 
-            await adminDb.collection("users").doc(currentUser.uid).set({
+            await adminDb.collection("usersDetails").doc(currentUser.uid).set({
                 name: user.name,
                 email: user.email,
                 role: user.role,
