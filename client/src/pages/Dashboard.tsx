@@ -10,6 +10,9 @@ export const Dashboard = () => {
             <Button variant="contained" onClick={authContext.logOut}>
                 Logout
             </Button>
+            {authContext.userDetails?.email}
+            {authContext.userDetails?.role.roleName}
+            {authContext.userDetails?.role.accessLevel}
         </div>
     );
 };

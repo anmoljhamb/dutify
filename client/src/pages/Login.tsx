@@ -47,7 +47,7 @@ export const Login = () => {
             <ImageBg />
             <div className="container z-10 h-auto w-96 rounded-md bg-textColor p-4 text-black">
                 <Typography variant="h4" className="text-center text-bgColor">
-                    Login Page
+                    Login
                 </Typography>
                 <Divider className="m-4" />
                 <Form
@@ -75,6 +75,12 @@ export const Login = () => {
                 <Button onClick={() => navigator("/forgot-password")}>
                     Forgot Password?
                 </Button>
+                <div className="flex items-center justify-center gap-2 text-bgColor">
+                    Don't have an account already?{" "}
+                    <Button onClick={() => navigator("/signup")}>
+                        Sign Up
+                    </Button>
+                </div>
             </div>
         </div>
     );

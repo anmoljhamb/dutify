@@ -30,11 +30,15 @@ export interface BaseUser {
     role: string;
 }
 
-export type UserDetails = {
-    role: Role;
+export interface FetchedUser {
     email: string;
     name: string;
     uid: string;
+    role: string;
+}
+
+export type UserDetails = FetchedUser & {
+    role: Role;
 };
 
 export interface Role {
@@ -80,4 +84,8 @@ export interface MessageContextInterface {
         messageType?: "error" | "info" | "success" | "warning",
         messageDuration?: number
     ): void;
+}
+
+export interface RoleContextInterface {
+    getRole(uid: string): Role;
 }

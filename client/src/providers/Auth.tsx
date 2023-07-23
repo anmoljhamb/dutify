@@ -1,20 +1,20 @@
 import { RawAxiosRequestHeaders } from "axios";
 import {
+    EmailAuthProvider,
     User,
+    reauthenticateWithCredential,
+    sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signOut,
     updateEmail,
     updatePassword,
-    reauthenticateWithCredential,
-    EmailAuthProvider,
-    sendPasswordResetEmail,
 } from "firebase/auth";
-import { onSnapshot, doc } from "firebase/firestore";
-import { useState, useMemo, useEffect } from "react";
-import { AuthContext } from "../contexts";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { AuthContext, RoleContext } from "../contexts";
 import { auth, db } from "../firebase";
-import { UserDetails } from "../types";
 import { LoadingPage } from "../pages";
+import { FetchedUser, UserDetails } from "../types";
 
 interface Props {
     children: React.ReactNode;
@@ -26,6 +26,8 @@ export const AuthProvider = ({ children }: Props) => {
     const [token, setToken] = useState<string>("");
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+
+    const roleContext = useContext(RoleContext)!;
 
     const loading = firebaseLoading || firestoreLoading;
 
@@ -57,12 +59,19 @@ export const AuthProvider = ({ children }: Props) => {
             if (!firebaseLoading) setFirestoreLoading(false);
             return;
         }
-        const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-            setUserDetails(doc.data() as UserDetails);
-            setFirestoreLoading(false);
-        });
+        const unsub = onSnapshot(
+            doc(db, "usersDetails", currentUser.uid),
+            (doc) => {
+                let tempUser = doc.data() as FetchedUser;
+                setUserDetails({
+                    ...tempUser,
+                    role: roleContext.getRole(tempUser.role),
+                } as UserDetails);
+                setFirestoreLoading(false);
+            }
+        );
         return unsub;
-    }, [currentUser, firebaseLoading]);
+    }, [currentUser, firebaseLoading, roleContext]);
 
     const logIn = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password);
