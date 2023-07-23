@@ -128,8 +128,14 @@ eventRouter.delete(
     async (req, res, next) => {
         try {
             const uid = req.query.uid as string;
+            const resp1 = await adminDb
+                .collection("tasks")
+                .where("projectId", "==", uid)
+                .get();
+            resp1.docs.forEach(async (doc) => {
+                await adminDb.collection("tasks").doc(doc.id).delete();
+            });
             const resp = await adminDb.collection("events").doc(uid).delete();
-            // todo delete the tasks with projectId as the given id.
             return res.status(200).json(resp);
         } catch (e) {
             next(e);

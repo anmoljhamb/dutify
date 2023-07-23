@@ -125,7 +125,7 @@ taskRouter.patch(
             const uid = req.query.uid as string;
             const { name, desc, assignedTo, projectId } =
                 req.body as Partial<BaseTask>;
-            const resp = await adminDb.collection("events").doc(uid).update({
+            const resp = await adminDb.collection("tasks").doc(uid).update({
                 name,
                 desc,
                 assignedTo,
