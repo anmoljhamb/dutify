@@ -51,3 +51,11 @@ export interface AuthContextInterface {
     headers: RawAxiosRequestHeaders;
     token: string;
 }
+
+export interface MessageContextInterface {
+    showMessage(
+        message: string,
+        messageType?: "error" | "info" | "success" | "warning",
+        messageDuration?: number
+    ): void;
+}
