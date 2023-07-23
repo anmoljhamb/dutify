@@ -129,7 +129,7 @@ export const EventsList = ({
                 />
             )}
             <DeleteEvent
-                deleteSite={deleteSite}
+                deleteEvent={deleteSite}
                 handleClose={() => setDeleteSite(false)}
                 event={events.filter((site) => site.uid === deleteKey).at(0)}
                 loading={loading}

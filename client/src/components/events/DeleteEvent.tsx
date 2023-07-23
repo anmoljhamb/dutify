@@ -13,7 +13,7 @@ import axios from "axios";
 import { useContext } from "react";
 
 interface PropsInterface {
-    deleteSite: boolean;
+    deleteEvent: boolean;
     handleClose(): void;
     event?: FetchedEvent;
     loading: boolean;
@@ -21,7 +21,7 @@ interface PropsInterface {
 }
 
 export const DeleteEvent = ({
-    deleteSite,
+    deleteEvent,
     handleClose,
     event,
     loading,
@@ -37,12 +37,12 @@ export const DeleteEvent = ({
                 headers: authContext.headers,
             })
             .then(() => {
-                showMessage("Site Deleted Successfully!", "success");
+                showMessage("Event Deleted Successfully!", "success");
             })
             .catch((err) => {
                 console.trace(err);
                 showMessage(
-                    "There was an error while deleting the given site. Please try again.",
+                    "There was an error while deleting the given event. Please try again.",
                     "error"
                 );
             })
@@ -54,7 +54,7 @@ export const DeleteEvent = ({
 
     return (
         <Dialog
-            open={deleteSite}
+            open={deleteEvent}
             onClose={
                 loading
                     ? () => {
