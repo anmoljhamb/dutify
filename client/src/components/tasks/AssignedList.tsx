@@ -9,19 +9,24 @@ import {
     GridValueGetterParams,
 } from "@mui/x-data-grid";
 import { useContext, useState } from "react";
-import { FetchedEvent, FetchedTask } from "../../types";
+import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 import axios from "axios";
 import { BACKEND_URI } from "../../constants";
 import { AuthContext, MessageContext } from "../../contexts";
 import { getElementByUid } from "../../utils";
+import { Typography } from "@mui/material";
 
 export const AssignedList = ({
     tasks,
     events,
+    complete,
+    users,
 }: {
     tasks: FetchedTask[];
     events: FetchedEvent[];
+    users: UserDetails[];
+    complete?: boolean;
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const authContext = useContext(AuthContext)!;
@@ -40,6 +45,16 @@ export const AssignedList = ({
                 return temp?.done ? "Complete" : "Incomplete";
             }
             return temp?.[key as keyof FetchedTask] || "NA";
+        };
+    };
+
+    const userEmailValueGetter = (key: string) => {
+        return (parmas: GridValueGetterParams) => {
+            const temp = getDetailsFromParams(parmas);
+            const uid = temp?.[key as keyof FetchedTask];
+            if (!uid) return "NA";
+            const user = getElementByUid(users, uid as string);
+            return `${user?.email} - ${user?.role.roleName}` || "NA";
         };
     };
 
@@ -158,10 +173,23 @@ export const AssignedList = ({
             flex: 2,
             align: "left",
         },
+        {
+            field: "createdBy",
+            headerName: "Task Created By",
+            valueGetter: userEmailValueGetter("userId"),
+            flex: 2,
+            align: "left",
+        },
     ];
 
     return (
-        <>
+        <div className="flex h-1/2 flex-col justify-between">
+            <Typography
+                variant="h3"
+                className="text-center text-2xl uppercase tracking-widest"
+            >
+                {complete ? "Completed" : "Incomplete"} Tasks
+            </Typography>
             <DataGrid
                 rows={tasks.map((task) => {
                     return { ...tasks, id: task.uid };
@@ -173,8 +201,8 @@ export const AssignedList = ({
                     },
                 }}
                 pageSizeOptions={[5]}
-                className="text-bgColor"
+                className="h-[92%] text-bgColor"
             />
-        </>
+        </div>
     );
 };

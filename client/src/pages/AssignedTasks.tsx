@@ -4,16 +4,21 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { AssignedList, ImageBg } from "../components";
 import { AuthContext } from "../contexts";
 import { db } from "../firebase";
-import { useFetchEvents } from "../hooks";
+import { useFetchEvents, useFetchUsers } from "../hooks";
 import { FetchedTask } from "../types";
+import { filterTasks } from "../utils";
 
 export const AssignedTask = () => {
     const [eventsLoading, setEventsLoading] = useState<boolean>(true);
+    const [usersLoading, setUsersLoading] = useState<boolean>(true);
     const lastLength = useRef(0);
     const authContext = useContext(AuthContext)!;
     const [tasks, setTasks] = useState<FetchedTask[]>([]);
 
     const events = useFetchEvents({ setLoading: setEventsLoading });
+    const users = useFetchUsers({ setLoading: setUsersLoading });
+
+    const loading = usersLoading || eventsLoading;
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "tasks"), (docsRef) => {
@@ -48,9 +53,19 @@ export const AssignedTask = () => {
                 {tasks.length === 0 && (
                     <p className="text-center text-error">No Task Was Found</p>
                 )}
-                {!eventsLoading && tasks.length > 0 && (
-                    <div className="h-full text-bgColor">
-                        <AssignedList tasks={tasks} events={events} />
+                {!loading && tasks.length > 0 && (
+                    <div className="flex h-full flex-col gap-4 overflow-hidden text-bgColor">
+                        <AssignedList
+                            tasks={filterTasks(tasks, false)}
+                            events={events}
+                            users={users}
+                        />
+                        <AssignedList
+                            tasks={filterTasks(tasks, true)}
+                            events={events}
+                            users={users}
+                            complete
+                        />
                     </div>
                 )}
             </div>
