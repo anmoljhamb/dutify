@@ -81,6 +81,7 @@ export const TasksList = ({
     const handleDone = (key: string) => {
         return () => {
             const tempTask = tasks.filter((task) => task.uid === key).at(0)!;
+            setLoading(true);
             axios
                 .get(
                     `${BACKEND_URI}/task/${

@@ -54,7 +54,7 @@ export const Tasks = () => {
                     <p className="text-center text-error">No Task Was Found</p>
                 )}
                 {!loading && tasks.length > 0 && (
-                    <div className="flex h-full flex-col overflow-hidden text-bgColor">
+                    <div className="flex h-full flex-col gap-4 overflow-hidden text-bgColor">
                         <TasksList
                             tasks={filterTasks(tasks, false)}
                             loading={tasksFetch}
