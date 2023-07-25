@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Delete, Edit } from "@mui/icons-material";
+import { Done, Edit, Undo } from "@mui/icons-material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -8,12 +8,15 @@ import {
     GridTreeNodeWithRender,
     GridValueGetterParams,
 } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
-import { getElementByUid } from "../../utils";
-import { DeleteTask, EditTask } from ".";
 import { Typography } from "@mui/material";
+import axios from "axios";
+import { DeleteTask, EditTask } from ".";
+import { BACKEND_URI } from "../../constants";
+import { AuthContext, MessageContext } from "../../contexts";
+import { getElementByUid } from "../../utils";
 
 export const TasksList = ({
     tasks,
@@ -35,6 +38,9 @@ export const TasksList = ({
     const [, setEditKey] = useState<string>("");
     const [deleteKey, setDeleteKey] = useState<string>("");
     const [task, setTask] = useState<FetchedTask | null>(null);
+
+    const authContext = useContext(AuthContext)!;
+    const { showMessage } = useContext(MessageContext)!;
 
     const getDetailsFromParams = (
         params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -72,10 +78,32 @@ export const TasksList = ({
         };
     };
 
-    const handleDelete = (key: string) => {
+    const handleDone = (key: string) => {
         return () => {
-            setDeleteKey(key);
-            setDeleteTask(true);
+            const tempTask = tasks.filter((task) => task.uid === key).at(0)!;
+            axios
+                .get(
+                    `${BACKEND_URI}/task/${
+                        !complete ? "done" : "undo"
+                    }?uid=${tempTask?.uid}`,
+                    {
+                        headers: authContext.headers,
+                    }
+                )
+                .then(() => {
+                    showMessage(
+                        `The task was marked as ${
+                            complete ? "undone" : "done"
+                        }.`,
+                        "success"
+                    );
+                })
+                .catch(() => {
+                    showMessage("There was an error.", "error");
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         };
     };
 
@@ -104,12 +132,21 @@ export const TasksList = ({
                         onClick={handleEdit(id as string)}
                         className="text-bgColor"
                     />,
-                    <GridActionsCellItem
-                        icon={<Delete />}
-                        label="Delete"
-                        onClick={handleDelete(id as string)}
-                        className="text-bgColor"
-                    />,
+                    complete ? (
+                        <GridActionsCellItem
+                            icon={<Undo />}
+                            label="Done"
+                            onClick={handleDone(id as string)}
+                            className="text-bgColor"
+                        />
+                    ) : (
+                        <GridActionsCellItem
+                            icon={<Done />}
+                            label="Undo"
+                            onClick={handleDone(id as string)}
+                            className="text-bgColor"
+                        />
+                    ),
                 ];
             },
         },
