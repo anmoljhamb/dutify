@@ -74,7 +74,7 @@ export const TasksList = ({
             const uid = temp?.[key as keyof FetchedTask];
             if (!uid) return "NA";
             const user = getElementByUid(users, uid as string);
-            return user?.email || "NA";
+            return `${user?.email} - ${user.role.roleName}` || "NA";
         };
     };
 
@@ -166,13 +166,6 @@ export const TasksList = ({
             align: "left",
         },
         {
-            field: "status",
-            headerName: "Status",
-            valueGetter: valueGetter("done"),
-            flex: 2,
-            align: "left",
-        },
-        {
             field: "projectId",
             headerName: "Event",
             valueGetter: eventNameGetter("projectId"),
@@ -183,14 +176,14 @@ export const TasksList = ({
             field: "assignedTo",
             headerName: "Assigned",
             valueGetter: userEmailValueGetter("assignedTo"),
-            flex: 2,
+            flex: 3,
             align: "left",
         },
         {
             field: "userId",
             headerName: "Created By",
             valueGetter: userEmailValueGetter("userId"),
-            flex: 2,
+            flex: 3,
             align: "left",
         },
     ];
