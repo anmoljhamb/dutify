@@ -1,5 +1,3 @@
-import { BACKEND_URI } from "../../constants";
-import { AuthContext, MessageContext } from "../../contexts";
 import {
     Button,
     Dialog,
@@ -7,10 +5,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    List,
+    Typography,
 } from "@mui/material";
-import { FetchedEvent, FetchedTask } from "../../types";
 import axios from "axios";
 import { useContext } from "react";
+import { TaskComment } from ".";
+import { BACKEND_URI } from "../../constants";
+import { AuthContext, MessageContext } from "../../contexts";
+import { FetchedTask } from "../../types";
 
 interface PropsInterface {
     deleteTask: boolean;
@@ -20,7 +23,7 @@ interface PropsInterface {
     setLoading(arg0: boolean): void;
 }
 
-export const DeleteTask = ({
+export const TaskComments = ({
     deleteTask,
     handleClose,
     task,
@@ -55,37 +58,61 @@ export const DeleteTask = ({
     return (
         <Dialog
             open={deleteTask}
+            fullWidth
             onClose={
                 loading
                     ? () => {
                           showMessage(
-                              "Can't close the dialog box right now. Deleting the given site.",
+                              "Can't close the dialog box right now.",
                               "warning"
                           );
                       }
                     : handleClose
             }
         >
-            <DialogTitle>Confirmation</DialogTitle>
+            <DialogTitle>View Comments</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure you want to delete the task {task?.name}
+                    {/* Are you sure you want to delete the task {task?.name} */}
+                    <div className="w-full">
+                        <Typography
+                            className="w-full text-center text-xl font-semibold uppercase tracking-widest"
+                            variant="h4"
+                        >
+                            Comments
+                        </Typography>
+                        <List
+                            sx={{
+                                width: "100%",
+                            }}
+                            className="flex h-96 flex-col items-center overflow-auto"
+                        >
+                            <TaskComment
+                                name="Person 1"
+                                time="12312"
+                                comment="adasdasbasdasas"
+                            />
+                            <TaskComment
+                                name="Person 1"
+                                time="12312"
+                                comment="adasdasbasdasas"
+                            />
+                            <TaskComment
+                                name="Person 1"
+                                time="12312"
+                                comment="adasdasbasdasas"
+                            />
+                        </List>
+                    </div>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button
                     onClick={handleClose}
                     disabled={loading}
-                    color="success"
-                >
-                    Disagree
-                </Button>
-                <Button
-                    onClick={deleteAccount}
-                    disabled={loading}
                     color="warning"
                 >
-                    Agree
+                    Close
                 </Button>
             </DialogActions>
         </Dialog>

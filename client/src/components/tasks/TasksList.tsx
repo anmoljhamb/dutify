@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Done, Edit, Undo } from "@mui/icons-material";
+import { Done, Edit, Undo, Visibility } from "@mui/icons-material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -13,7 +13,7 @@ import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 import { Typography } from "@mui/material";
 import axios from "axios";
-import { DeleteTask, EditTask } from ".";
+import { TaskComments, EditTask } from ".";
 import { BACKEND_URI } from "../../constants";
 import { AuthContext, MessageContext } from "../../contexts";
 import { getElementByUid } from "../../utils";
@@ -108,6 +108,15 @@ export const TasksList = ({
         };
     };
 
+    const handleView = (key: string) => {
+        return () => {
+            setDeleteKey(key);
+            setDeleteTask(true);
+            const tempTask = tasks.filter((task) => task.uid === key).at(0)!;
+            setTask(tempTask);
+        };
+    };
+
     const handleEdit = (key: string) => {
         return () => {
             setEditKey(key);
@@ -123,8 +132,8 @@ export const TasksList = ({
             headerName: "Actions",
             type: "actions",
             sortable: false,
-            width: 100,
-            align: "left",
+            width: 85,
+            align: "center",
             getActions: ({ id }) => {
                 return [
                     <GridActionsCellItem
@@ -193,6 +202,24 @@ export const TasksList = ({
             flex: 2,
             align: "left",
         },
+        {
+            field: "view",
+            headerName: "View",
+            type: "actions",
+            sortable: false,
+            width: 60,
+            align: "center",
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={<Visibility />}
+                        label="View"
+                        onClick={handleView(id as string)}
+                        className="text-bgColor"
+                    />,
+                ];
+            },
+        },
     ];
 
     return (
@@ -214,7 +241,7 @@ export const TasksList = ({
                     task={task!}
                 />
             )}
-            <DeleteTask
+            <TaskComments
                 deleteTask={deleteTask}
                 handleClose={() => setDeleteTask(false)}
                 task={tasks.filter((task) => task.uid === deleteKey).at(0)}
