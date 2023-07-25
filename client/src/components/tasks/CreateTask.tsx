@@ -89,12 +89,20 @@ export const CreateTask = ({
                             type: "option",
                             name: "assignedTo",
                             label: "Assign To",
-                            choices: users.map((user) => {
-                                return {
-                                    label: `${user.name} - ${user.role.roleName} (${user.email})`,
-                                    value: user.uid,
-                                };
-                            }),
+                            choices: users
+                                .filter((user) => {
+                                    return (
+                                        user.role.accessLevel <=
+                                        authContext.userDetails!.role
+                                            .accessLevel
+                                    );
+                                })
+                                .map((user) => {
+                                    return {
+                                        label: `${user.name} - ${user.role.roleName} (${user.email})`,
+                                        value: user.uid,
+                                    };
+                                }),
                         },
                     ]}
                     onSubmit={(values: Record<string, string>) => {

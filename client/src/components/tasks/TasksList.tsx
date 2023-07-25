@@ -74,7 +74,7 @@ export const TasksList = ({
             const uid = temp?.[key as keyof FetchedTask];
             if (!uid) return "NA";
             const user = getElementByUid(users, uid as string);
-            return `${user?.email} - ${user.role.roleName}` || "NA";
+            return `${user?.email} - ${user?.role.roleName}` || "NA";
         };
     };
 

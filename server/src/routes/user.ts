@@ -27,10 +27,6 @@ userRouter.get("/", protectedRoute, async (_req, res, next) => {
             }
         );
 
-        users = users.filter((user) => {
-            return user.role.accessLevel <= currentUser.role.accessLevel;
-        });
-
         return res.status(200).json(users);
     } catch (e) {
         next(e);
@@ -80,9 +76,7 @@ userRouter.delete(
             }
             await adminAuth.deleteUser(uid);
             await adminDb.collection("usersDetails").doc(uid).delete();
-            return res
-                .status(200)
-                .json({ message: "The user was deleted successfully!" });
+            return res.json({ message: "The user was deleted successfully!" });
         } catch (e) {
             return next(e);
         }

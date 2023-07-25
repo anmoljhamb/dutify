@@ -50,3 +50,9 @@ export interface BaseTask {
     projectId: string;
     assignedTo: string;
 }
+
+export type FetchedTask = BaseTask & {
+    userId: string;
+    uid: string;
+    done: boolean;
+};
