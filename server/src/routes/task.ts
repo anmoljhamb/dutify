@@ -118,7 +118,8 @@ taskRouter.post(
     validate(createTaskSchema as unknown as ValidationSchema),
     async (req, res, next) => {
         try {
-            const { name, desc, projectId, assignedTo } = req.body as BaseTask;
+            const { name, desc, projectId, assignedTo, dueDate } =
+                req.body as BaseTask;
             const docRef = adminDb.collection("tasks").doc();
             const currentUser = res.locals.user as User;
             await docRef.set({
@@ -129,6 +130,7 @@ taskRouter.post(
                 userId: currentUser.uid,
                 done: false,
                 uid: docRef.id,
+                dueDate,
             });
             return res.status(200).json({
                 name,
@@ -138,6 +140,7 @@ taskRouter.post(
                 userId: currentUser.uid,
                 done: false,
                 uid: docRef.id,
+                dueDate,
             });
         } catch (e) {
             next(e);

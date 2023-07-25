@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { AssignedList, CreateTask, ImageBg, TasksList } from "../components";
+import { Divider, Typography } from "@mui/material";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
-import { FetchedEvent, FetchedTask } from "../types";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AssignedList, ImageBg } from "../components";
 import { AuthContext } from "../contexts";
-import { Typography, Divider, Button, CircularProgress } from "@mui/material";
+import { db } from "../firebase";
 import { useFetchEvents } from "../hooks";
+import { FetchedTask } from "../types";
 
 export const AssignedTask = () => {
     const [eventsLoading, setEventsLoading] = useState<boolean>(true);

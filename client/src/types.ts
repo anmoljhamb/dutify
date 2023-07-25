@@ -70,6 +70,7 @@ export interface BaseTask {
     desc: string;
     projectId: string;
     assignedTo: string;
+    dueDate: string;
 }
 
 export type FetchedTask = BaseTask & {

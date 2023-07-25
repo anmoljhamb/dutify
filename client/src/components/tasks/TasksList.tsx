@@ -186,6 +186,13 @@ export const TasksList = ({
             flex: 3,
             align: "left",
         },
+        {
+            field: "dueDate",
+            headerName: "Due Date",
+            valueGetter: valueGetter("dueDate"),
+            flex: 2,
+            align: "left",
+        },
     ];
 
     return (

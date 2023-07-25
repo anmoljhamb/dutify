@@ -97,21 +97,26 @@ export const AssignedList = ({
             headerName: "Action",
             type: "actions",
             sortable: false,
-            width: 100,
-            align: "left",
+            width: 70,
+            align: "center",
             getActions: ({ id }) => {
+                const tempTask = tasks.filter((task) => task.uid === id).at(0)!;
+                if (tempTask.done) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<Undo />}
+                            label="Mark as Undone"
+                            onClick={handleUndone(id as string)}
+                            className="text-bgColor"
+                            disabled={loading}
+                        />,
+                    ];
+                }
                 return [
                     <GridActionsCellItem
                         icon={<Done />}
                         label="Mark as Done"
                         onClick={handleDone(id as string)}
-                        className="text-bgColor"
-                        disabled={loading}
-                    />,
-                    <GridActionsCellItem
-                        icon={<Undo />}
-                        label="Mark as Undone"
-                        onClick={handleUndone(id as string)}
                         className="text-bgColor"
                         disabled={loading}
                     />,
@@ -143,6 +148,13 @@ export const AssignedList = ({
             field: "projectId",
             headerName: "Event",
             valueGetter: eventNameGetter("projectId"),
+            flex: 2,
+            align: "left",
+        },
+        {
+            field: "dueDate",
+            headerName: "Due Date",
+            valueGetter: valueGetter("dueDate"),
             flex: 2,
             align: "left",
         },

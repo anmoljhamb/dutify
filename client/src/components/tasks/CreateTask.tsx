@@ -62,6 +62,7 @@ export const CreateTask = ({
                         desc: "",
                         projectId: "",
                         assignedTo: "",
+                        dueDate: "",
                     }}
                     validationSchema={
                         createTaskSchema as unknown as ValidationSchemaInterface
@@ -103,6 +104,11 @@ export const CreateTask = ({
                                         value: user.uid,
                                     };
                                 }),
+                        },
+                        {
+                            type: "text",
+                            label: "Due Date (dd/mm/yyyy): ",
+                            name: "dueDate",
                         },
                     ]}
                     onSubmit={(values: Record<string, string>) => {
