@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { CreateEvent, EventsList, ImageBg } from "../components";
-import { useFetchEvents } from "../hooks";
+import { useFetchEvents, useFetchUsers } from "../hooks";
 import { Button, CircularProgress, Divider, Typography } from "@mui/material";
 
 export const EventsPage = () => {
     const [eventsLoading, setEventsLoading] = useState<boolean>(true);
+    const [usersLoading, setUsersLoading] = useState<boolean>(true);
     const [eventsFetch, setEventsFetch] = useState<boolean>(false);
     const [addEvent, setAddEvent] = useState<boolean>(false);
 
@@ -12,8 +13,11 @@ export const EventsPage = () => {
         eventsFetch,
         setLoading: setEventsLoading,
     });
+    const users = useFetchUsers({
+        setLoading: setUsersLoading,
+    });
 
-    const loading = eventsLoading;
+    const loading = eventsLoading || usersLoading;
 
     return (
         <div className="relative ml-[200px] flex h-full w-[calc(100%-200px)] flex-col items-center justify-center bg-bgColor">
@@ -53,6 +57,7 @@ export const EventsPage = () => {
                             events={events}
                             loading={eventsFetch}
                             setLoading={setEventsFetch}
+                            users={users}
                         />
                     </div>
                 )}

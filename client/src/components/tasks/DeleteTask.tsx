@@ -8,14 +8,14 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import { FetchedEvent } from "../../types";
+import { FetchedEvent, FetchedTask } from "../../types";
 import axios from "axios";
 import { useContext } from "react";
 
 interface PropsInterface {
     deleteTask: boolean;
     handleClose(): void;
-    task?: FetchedEvent;
+    task?: FetchedTask;
     loading: boolean;
     setLoading(arg0: boolean): void;
 }

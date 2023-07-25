@@ -7,25 +7,31 @@ import {
     GridTreeNodeWithRender,
     GridValueGetterParams,
 } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DeleteEvent, EditEvent } from ".";
-import { FetchedEvent } from "../../types";
+import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
+import { getElementByUid } from "../../utils";
+import { AuthContext } from "../../contexts";
 // import { DeleteSite, EditSite } from ".";
 // import { getUserByUid } from "../../utils";
 export const EventsList = ({
     events,
     loading,
     setLoading,
+    users,
 }: {
     events: FetchedEvent[];
     loading: boolean;
     setLoading: (arg0: boolean) => void;
+    users: UserDetails[];
 }) => {
     const [editEvent, setEditEvent] = useState<boolean>(false);
     const [deleteSite, setDeleteSite] = useState<boolean>(false);
     const [, setEditKey] = useState<string>("");
     const [deleteKey, setDeleteKey] = useState<string>("");
     const [event, setEvent] = useState<FetchedEvent | null>(null);
+
+    const authContext = useContext(AuthContext)!;
 
     const getDetailsFromParams = (
         params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -48,8 +54,8 @@ export const EventsList = ({
             const temp = getDetailsFromParams(parmas);
             const uid = temp?.[key as keyof FetchedEvent];
             if (!uid) return "NA";
-            // const user = getUserByUid(users, uid as string);
-            return "NA";
+            const user = getElementByUid(users, uid as string);
+            return `${user?.email} - ${user?.role.roleName}` || "NA";
         };
     };
 
@@ -78,20 +84,33 @@ export const EventsList = ({
             width: 100,
             align: "left",
             getActions: ({ id }) => {
-                return [
-                    <GridActionsCellItem
-                        icon={<Edit />}
-                        label="Edit"
-                        onClick={handleEdit(id as string)}
-                        className="text-bgColor"
-                    />,
-                    <GridActionsCellItem
-                        icon={<Delete />}
-                        label="Delete"
-                        onClick={handleDelete(id as string)}
-                        className="text-bgColor"
-                    />,
-                ];
+                const event = events.filter((site) => site.uid === id).at(0);
+                const createdBy = getElementByUid(
+                    users,
+                    event!.createdBy as string
+                );
+
+                if (
+                    authContext.userDetails!.role.accessLevel >=
+                    createdBy.role.accessLevel
+                ) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<Edit />}
+                            label="Edit"
+                            onClick={handleEdit(id as string)}
+                            className="text-bgColor"
+                        />,
+                        <GridActionsCellItem
+                            icon={<Delete />}
+                            label="Delete"
+                            onClick={handleDelete(id as string)}
+                            className="text-bgColor"
+                        />,
+                    ];
+                } else {
+                    return [<p className="w-full text-center">Unauthorized</p>];
+                }
             },
         },
         {
@@ -101,18 +120,18 @@ export const EventsList = ({
             flex: 2,
             align: "left",
         },
-        // {
-        //     field: "done",
-        //     headerName: "Status",
-        //     valueGetter: valueGetter("done"),
-        //     flex: 2,
-        //     align: "left",
-        // },
         {
             field: "desc",
             headerName: "Description",
             valueGetter: valueGetter("desc"),
             flex: 4,
+            align: "left",
+        },
+        {
+            field: "createdBy",
+            headerName: "Created By",
+            valueGetter: userEmailValueGetter("createdBy"),
+            flex: 2,
             align: "left",
         },
     ];

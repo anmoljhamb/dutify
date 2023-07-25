@@ -1,11 +1,7 @@
 import express from "express";
 import { protectedRoute, validate } from "../middleware";
-import {
-    createEventSchema,
-    fetchEventSchema,
-    updateEventSchema,
-} from "../schemas";
-import { BaseEvent, ValidationSchema } from "../types";
+import { createEventSchema, fetchEventSchema } from "../schemas";
+import { BaseEvent, User, ValidationSchema } from "../types";
 import { adminDb } from "../utils";
 
 export const eventRouter = express.Router();
@@ -56,11 +52,22 @@ eventRouter.post(
     async (req, res, next) => {
         try {
             const { name, desc } = req.body as BaseEvent;
+            const currentUser = res.locals.user as User;
             const docRef = adminDb.collection("events").doc();
-            await docRef.set({ name, desc, uid: docRef.id, done: false });
-            return res
-                .status(200)
-                .json({ name, desc, uid: docRef.id, done: false });
+            await docRef.set({
+                name,
+                desc,
+                uid: docRef.id,
+                done: false,
+                createdBy: currentUser.uid,
+            });
+            return res.status(200).json({
+                name,
+                desc,
+                uid: docRef.id,
+                done: false,
+                createdBy: currentUser.uid,
+            });
         } catch (e) {
             next(e);
         }
@@ -105,7 +112,7 @@ eventRouter.patch(
     "/",
     protectedRoute,
     validate(fetchEventSchema as unknown as ValidationSchema),
-    validate(updateEventSchema as unknown as ValidationSchema),
+    validate(createEventSchema as unknown as ValidationSchema),
     async (req, res, next) => {
         try {
             const uid = req.query.uid as string;

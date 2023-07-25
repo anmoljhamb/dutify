@@ -42,6 +42,7 @@ export interface BaseEvent {
 export type FetchedEvent = BaseEvent & {
     uid: string;
     done: boolean;
+    createdBy: string;
 };
 
 export interface BaseTask {
