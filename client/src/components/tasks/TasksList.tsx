@@ -13,6 +13,7 @@ import { FetchedEvent, FetchedTask, UserDetails } from "../../types";
 // import { DeleteSite, EditSite } from ".";
 import { getElementByUid } from "../../utils";
 import { DeleteTask, EditTask } from ".";
+import { Typography } from "@mui/material";
 
 export const TasksList = ({
     tasks,
@@ -20,12 +21,14 @@ export const TasksList = ({
     setLoading,
     users,
     events,
+    complete,
 }: {
     tasks: FetchedTask[];
     events: FetchedEvent[];
     loading: boolean;
     setLoading: (arg0: boolean) => void;
     users: UserDetails[];
+    complete?: boolean;
 }) => {
     const [editTask, setEditTask] = useState<boolean>(false);
     const [deleteTask, setDeleteTask] = useState<boolean>(false);
@@ -155,7 +158,13 @@ export const TasksList = ({
     ];
 
     return (
-        <>
+        <div className="flex h-1/2 flex-col justify-between">
+            <Typography
+                variant="h3"
+                className="text-center text-2xl uppercase tracking-widest"
+            >
+                {complete ? "Completed" : "Incomplete"} Tasks
+            </Typography>
             {editTask && task !== null && (
                 <EditTask
                     loading={loading}
@@ -185,8 +194,8 @@ export const TasksList = ({
                     },
                 }}
                 pageSizeOptions={[5]}
-                className="text-bgColor"
+                className="h-[92%] text-bgColor"
             />
-        </>
+        </div>
     );
 };

@@ -2,6 +2,7 @@ import { Button, CircularProgress, Divider, Typography } from "@mui/material";
 import { useState } from "react";
 import { CreateTask, ImageBg, TasksList } from "../components";
 import { useFetchEvents, useFetchTasks, useFetchUsers } from "../hooks";
+import { filterTasks } from "../utils";
 
 export const Tasks = () => {
     const [eventsLoading, setEventsLoading] = useState<boolean>(true);
@@ -19,7 +20,7 @@ export const Tasks = () => {
     return (
         <div className="relative ml-[200px] flex h-full w-[calc(100%-200px)] flex-col items-center justify-center bg-bgColor">
             <ImageBg />
-            <div className="z-10 flex h-[90%] w-11/12 flex-col rounded-md bg-textColor p-4 text-bgColor">
+            <div className="z-10 flex h-[94%] w-11/12 flex-col rounded-md bg-textColor p-4 text-bgColor">
                 <Typography variant="h4" className="text-center">
                     Task Management
                 </Typography>
@@ -53,13 +54,21 @@ export const Tasks = () => {
                     <p className="text-center text-error">No Task Was Found</p>
                 )}
                 {!loading && tasks.length > 0 && (
-                    <div className="h-full text-bgColor">
+                    <div className="flex h-full flex-col overflow-hidden text-bgColor">
                         <TasksList
-                            tasks={tasks}
+                            tasks={filterTasks(tasks, false)}
                             loading={tasksFetch}
                             setLoading={setTasksFetch}
                             events={events}
                             users={users}
+                        />
+                        <TasksList
+                            tasks={filterTasks(tasks, true)}
+                            loading={tasksFetch}
+                            setLoading={setTasksFetch}
+                            events={events}
+                            users={users}
+                            complete
                         />
                     </div>
                 )}
