@@ -145,6 +145,13 @@ export const TasksList = ({
             flex: 2,
             align: "left",
         },
+        {
+            field: "userId",
+            headerName: "Created By",
+            valueGetter: userEmailValueGetter("userId"),
+            flex: 2,
+            align: "left",
+        },
     ];
 
     return (

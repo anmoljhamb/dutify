@@ -16,7 +16,7 @@ taskRouter.get("/", protectedRoute, async (req, res, next) => {
         const resp = (
             await adminDb
                 .collection("tasks")
-                .where("userId", "==", currentUser.uid)
+                // .where("userId", "==", currentUser.uid)
                 .get()
         ).docs.map((doc) => doc.data());
         return res.status(200).json(resp);
