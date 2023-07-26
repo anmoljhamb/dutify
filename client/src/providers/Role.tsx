@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { RoleContext } from "../contexts";
 import { db } from "../firebase";
@@ -14,16 +14,19 @@ export const RoleProvider = ({ children }: PropsInterface) => {
     const [roles, setRoles] = useState<Record<string, Role>>({});
 
     useEffect(() => {
-        const unsub = onSnapshot(collection(db, "roles"), (docsRef) => {
-            docsRef.docs.forEach((doc) => {
-                setRoles((old) => {
-                    console.log("setting roles");
-                    return { ...old, [doc.id]: doc.data() as Role };
+        getDocs(collection(db, "roles"))
+            .then((docsRef) => {
+                docsRef.docs.forEach((doc) => {
+                    setRoles((old) => {
+                        console.log("setting roles");
+                        return { ...old, [doc.id]: doc.data() as Role };
+                    });
                 });
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.trace(err);
             });
-            setLoading(false);
-        });
-        return unsub;
     }, []);
 
     const rolesChoices = useMemo(() => {
