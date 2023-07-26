@@ -34,9 +34,9 @@ export const TasksList = ({
     complete?: boolean;
 }) => {
     const [editTask, setEditTask] = useState<boolean>(false);
-    const [deleteTask, setDeleteTask] = useState<boolean>(false);
+    const [viewTask, setViewTask] = useState<boolean>(false);
     const [, setEditKey] = useState<string>("");
-    const [deleteKey, setDeleteKey] = useState<string>("");
+    const [viewKey, setViewKey] = useState<string>("");
     const [task, setTask] = useState<FetchedTask | null>(null);
 
     const authContext = useContext(AuthContext)!;
@@ -110,8 +110,8 @@ export const TasksList = ({
 
     const handleView = (key: string) => {
         return () => {
-            setDeleteKey(key);
-            setDeleteTask(true);
+            setViewKey(key);
+            setViewTask(true);
             const tempTask = tasks.filter((task) => task.uid === key).at(0)!;
             setTask(tempTask);
         };
@@ -242,9 +242,9 @@ export const TasksList = ({
                 />
             )}
             <TaskComments
-                deleteTask={deleteTask}
-                handleClose={() => setDeleteTask(false)}
-                task={tasks.filter((task) => task.uid === deleteKey).at(0)}
+                deleteTask={viewTask}
+                handleClose={() => setViewTask(false)}
+                task={tasks.filter((task) => task.uid === viewKey).at(0)}
                 loading={loading}
                 setLoading={setLoading}
                 users={users}

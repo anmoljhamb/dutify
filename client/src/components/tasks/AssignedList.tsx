@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Done, Undo } from "@mui/icons-material";
+import { Done, Undo, Visibility } from "@mui/icons-material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -16,6 +16,7 @@ import { BACKEND_URI } from "../../constants";
 import { AuthContext, MessageContext } from "../../contexts";
 import { getElementByUid } from "../../utils";
 import { Typography } from "@mui/material";
+import { TaskComments } from ".";
 
 export const AssignedList = ({
     tasks,
@@ -29,6 +30,10 @@ export const AssignedList = ({
     complete?: boolean;
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [viewTask, setViewTask] = useState<boolean>(false);
+    const [viewKey, setViewKey] = useState<string>("");
+    const [task, setTask] = useState<FetchedTask | null>(null);
+
     const authContext = useContext(AuthContext)!;
     const { showMessage } = useContext(MessageContext)!;
 
@@ -84,6 +89,15 @@ export const AssignedList = ({
                 .finally(() => {
                     setLoading(false);
                 });
+        };
+    };
+
+    const handleView = (key: string) => {
+        return () => {
+            setViewKey(key);
+            setViewTask(true);
+            const tempTask = tasks.filter((task) => task.uid === key).at(0)!;
+            setTask(tempTask);
         };
     };
 
@@ -180,6 +194,24 @@ export const AssignedList = ({
             flex: 2,
             align: "left",
         },
+        {
+            field: "view",
+            headerName: "View",
+            type: "actions",
+            sortable: false,
+            width: 60,
+            align: "center",
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={<Visibility />}
+                        label="View"
+                        onClick={handleView(id as string)}
+                        className="text-bgColor"
+                    />,
+                ];
+            },
+        },
     ];
 
     return (
@@ -190,6 +222,14 @@ export const AssignedList = ({
             >
                 {complete ? "Completed" : "Incomplete"} Tasks
             </Typography>
+            <TaskComments
+                deleteTask={viewTask}
+                handleClose={() => setViewTask(false)}
+                task={tasks.filter((task) => task.uid === viewKey).at(0)}
+                loading={loading}
+                setLoading={setLoading}
+                users={users}
+            />
             <DataGrid
                 rows={tasks.map((task) => {
                     return { ...tasks, id: task.uid };
