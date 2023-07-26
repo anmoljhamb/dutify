@@ -54,13 +54,29 @@ export const TaskComments = ({
                 docsRef.docs.forEach((doc) => {
                     const time = dayjs(
                         doc.data().createdAt.seconds * 1000
-                    ).format("HH:mm DD/MM/YYYY");
+                    ).format();
                     const user = getElementByUid(users, doc.data().userId);
                     const comment = doc.data().comment;
                     tempComments.push({ comment, user, time });
                 });
                 setTimeout(() => setCommentLoading(false));
-                setComments(tempComments);
+                console.log(tempComments);
+                console.log(tempComments.length);
+                setComments(
+                    tempComments.sort((a, b) => {
+                        const x = dayjs(a.time);
+                        const y = dayjs(b.time);
+                        console.log(x);
+                        console.log(y);
+                        if (x.isBefore(y)) {
+                            return 1;
+                        }
+                        if (y.isBefore(x)) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                );
             }
         );
         return unsub;
@@ -84,7 +100,6 @@ export const TaskComments = ({
             <DialogTitle>View Comments</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {/* Are you sure you want to delete the task {task?.name} */}
                     <div className="w-full">
                         <Typography
                             className="w-full text-center text-xl font-semibold uppercase tracking-widest"

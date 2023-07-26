@@ -6,6 +6,7 @@ import {
     Divider,
     Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
 import React from "react";
 
 export const TaskComment = ({
@@ -35,7 +36,7 @@ export const TaskComment = ({
                                 color="text.primary"
                                 className="font-bold"
                             >
-                                {time}{" "}
+                                {dayjs(time).format("HH:mm DD/MM/YYYY")}{" "}
                             </Typography>
                         </div>
                     }
