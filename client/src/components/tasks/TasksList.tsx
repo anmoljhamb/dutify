@@ -247,6 +247,7 @@ export const TasksList = ({
                 task={tasks.filter((task) => task.uid === deleteKey).at(0)}
                 loading={loading}
                 setLoading={setLoading}
+                users={users}
             />
             <DataGrid
                 rows={tasks.map((task) => {

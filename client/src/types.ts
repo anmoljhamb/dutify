@@ -106,3 +106,9 @@ export interface RoleContextInterface {
     rolesChoices: AutoCompleteOption[];
     getRoleByAccessLevel(arg0: number): Role;
 }
+
+export interface TaskCommentInterface {
+    time: string;
+    comment: string;
+    user: UserDetails;
+}

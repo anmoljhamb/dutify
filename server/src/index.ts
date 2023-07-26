@@ -2,7 +2,13 @@ import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
 import morgan from "morgan";
-import { roleRouter, userRouter, eventRouter, taskRouter } from "./routes";
+import {
+    roleRouter,
+    userRouter,
+    eventRouter,
+    taskRouter,
+    commentRouter,
+} from "./routes";
 import { fetchRoles } from "./utils";
 
 const app = express();
@@ -18,6 +24,7 @@ app.use("/role", roleRouter);
 app.use("/user", userRouter);
 app.use("/task", taskRouter);
 app.use("/event", eventRouter);
+app.use("/comment", commentRouter);
 
 // 404 not found.
 app.use((req, _res, next) => {

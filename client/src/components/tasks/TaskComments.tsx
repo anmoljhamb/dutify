@@ -9,11 +9,17 @@ import {
     Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TaskComment } from ".";
 import { BACKEND_URI } from "../../constants";
 import { AuthContext, MessageContext } from "../../contexts";
-import { FetchedTask } from "../../types";
+import { FetchedTask, TaskCommentInterface, UserDetails } from "../../types";
+import { Form } from "..";
+import { commentSchema } from "../../validators/commentSchema";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
+import dayjs from "dayjs";
+import { getElementByUid } from "../../utils";
 
 interface PropsInterface {
     deleteTask: boolean;
@@ -21,6 +27,7 @@ interface PropsInterface {
     task?: FetchedTask;
     loading: boolean;
     setLoading(arg0: boolean): void;
+    users: UserDetails[];
 }
 
 export const TaskComments = ({
@@ -29,31 +36,35 @@ export const TaskComments = ({
     task,
     loading,
     setLoading,
+    users,
 }: PropsInterface) => {
     const { showMessage } = useContext(MessageContext)!;
     const authContext = useContext(AuthContext)!;
 
-    const deleteAccount = () => {
-        setLoading(true);
-        axios
-            .delete(`${BACKEND_URI}/task?uid=${task?.uid}`, {
-                headers: authContext.headers,
-            })
-            .then(() => {
-                showMessage("Task Deleted Successfully!", "success");
-            })
-            .catch((err) => {
-                console.trace(err);
-                showMessage(
-                    "There was an error while deleting the given task. Please try again.",
-                    "error"
-                );
-            })
-            .finally(() => {
-                setLoading(false);
-                handleClose();
-            });
-    };
+    const [commentLoading, setCommentLoading] = useState<boolean>(false);
+    const [comments, setComments] = useState<TaskCommentInterface[]>([]);
+
+    useEffect(() => {
+        if (!task) return;
+        const unsub = onSnapshot(
+            collection(db, "tasks", task.uid, "comments"),
+            (docsRef) => {
+                setCommentLoading(true);
+                const tempComments: TaskCommentInterface[] = [];
+                docsRef.docs.forEach((doc) => {
+                    const time = dayjs(
+                        doc.data().createdAt.seconds * 1000
+                    ).format("HH:mm DD/MM/YYYY");
+                    const user = getElementByUid(users, doc.data().userId);
+                    const comment = doc.data().comment;
+                    tempComments.push({ comment, user, time });
+                });
+                setTimeout(() => setCommentLoading(false));
+                setComments(tempComments);
+            }
+        );
+        return unsub;
+    }, [authContext.userDetails, task, users]);
 
     return (
         <Dialog
@@ -87,22 +98,58 @@ export const TaskComments = ({
                             }}
                             className="flex h-96 flex-col items-center overflow-auto"
                         >
-                            <TaskComment
-                                name="Person 1"
-                                time="12312"
-                                comment="adasdasbasdasas"
-                            />
-                            <TaskComment
-                                name="Person 1"
-                                time="12312"
-                                comment="adasdasbasdasas"
-                            />
-                            <TaskComment
-                                name="Person 1"
-                                time="12312"
-                                comment="adasdasbasdasas"
-                            />
+                            {comments.map((comment) => {
+                                return (
+                                    <TaskComment
+                                        name={comment.user.name}
+                                        time={comment.time}
+                                        comment={comment.comment}
+                                    />
+                                );
+                            })}
                         </List>
+                        <Form
+                            buttonText="Comment"
+                            loading={commentLoading}
+                            formFields={[
+                                {
+                                    type: "text",
+                                    name: "comment",
+                                    label: "Your Comment",
+                                },
+                            ]}
+                            initialValues={{
+                                comment: "",
+                            }}
+                            onSubmit={(values: Record<string, string>) => {
+                                setCommentLoading(true);
+                                axios
+                                    .post(
+                                        `${BACKEND_URI}/comment/?uid=${task?.uid}`,
+                                        values,
+                                        {
+                                            headers: authContext.headers,
+                                        }
+                                    )
+                                    .then(() => {
+                                        showMessage(
+                                            "Commented successfully!",
+                                            "success"
+                                        );
+                                    })
+                                    .catch((e) => {
+                                        console.trace(e);
+                                        showMessage(
+                                            "There was an error while commenting. Please try again later.",
+                                            "error"
+                                        );
+                                    })
+                                    .finally(() => {
+                                        setCommentLoading(false);
+                                    });
+                            }}
+                            validationSchema={commentSchema}
+                        />
                     </div>
                 </DialogContentText>
             </DialogContent>
