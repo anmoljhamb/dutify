@@ -12,7 +12,7 @@ export const Navbar = () => {
                             component="div"
                             className="flex-grow text-3xl"
                         >
-                            VENT-SIGN
+                            Dutify
                         </Typography>
                     </Link>
                 </Toolbar>

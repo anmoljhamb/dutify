@@ -39,7 +39,7 @@ export const SideDrawer = () => {
                         className="w-full flex-grow cursor-pointer text-center text-2xl"
                         onClick={() => navigator("/")}
                     >
-                        VENT-SIGN
+                        DUTIFY
                     </Typography>
                 </ListItem>
                 <Divider />
