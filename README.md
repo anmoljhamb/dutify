@@ -79,6 +79,48 @@
 - Express
 - morgan
 
+## Setup
+
+```
+# Clone the repository
+git clone https://github.com/anmoljhamb/dutify
+
+# Navigate to the project directory
+cd dutify
+
+# Install dependencies for the client
+cd client
+yarn
+
+# Navigate to the server directory
+cd ../server
+
+# Install dependencies for the server
+yarn
+
+# Firebase Setup:
+# 1. Create a Firebase project: https://console.firebase.google.com/
+# 2. Enable authentication with email/password login.
+# 3. Build a Firestore database.
+#   3.1 Add a collection named "roles" with documents specifying dynamic roles (accessLevel and roleName).
+#       - Higher accessLevel grants more authority; Admins should have the highest accessLevel.
+#   3.2 Refer to the provided image for reference (exclude remaining collections for now).
+# 4. Go to Project Settings and generate a private key for your admin account.
+# 5. Save the key as "credentials.json" in the server directory.
+# 6. Create a new app in Firebase and copy the config.
+# 7. Replace Firebase config in the server/src/utils/firebase.ts file.
+# 8. Do the same for the client in the client/src/firebase.tsx file.
+
+# Run the application
+# For the client
+cd ../client
+yarn run dev
+
+# For the server
+cd ../server
+yarn run dev
+```
+
 ## Usage
 
 - Plan and manage events using the dedicated Event Management page.
