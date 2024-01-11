@@ -4,6 +4,10 @@
 
 "Dutify" is a powerful end-to-end event and task management system designed to streamline and simplify the planning, organization, and execution of events within organizations. It is built with flexibility in mind, allowing users to define dynamic roles with varying levels of authority to suit their organizational structure.
 
+## Screenshot
+
+![Screenshot](./screenshot.png)
+
 ## Features
 
 - **Dynamic Roles:**
